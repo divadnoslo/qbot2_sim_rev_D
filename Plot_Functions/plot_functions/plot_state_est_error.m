@@ -9,21 +9,21 @@ if (delta_r_t__t_b_est_flag == true)
     figure
     hold on
     subplot(3,1,1)
-    plot(t, out.delta_x_t__t_b_est.Data(:,1), 'r')
+    plot(t, out.delta_r_t__t_b_est(:,1), 'r')
     title('\deltar^t_t_b_,_x estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Position (m)')
     grid on
     subplot(3,1,2)
-    plot(t, out.delta_x_t__t_b_est.Data(:,2), 'g')
+    plot(t, out.delta_r_t__t_b_est(:,2), 'g')
     title('\deltar^t_t_b_,_y estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Position (m)')
     grid on
     subplot(3,1,3)
-    plot(t, out.delta_x_t__t_b_est.Data(:,3), 'b')
+    plot(t, out.delta_r_t__t_b_est(:,3), 'b')
     title('\deltar^t_t_b_,_z estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -37,21 +37,21 @@ if (delta_v_t__t_b_est_flag == true)
     figure
     hold on
     subplot(3,1,1)
-    plot(t, out.delta_x_t__t_b_est.Data(:,4), 'r')
+    plot(t, out.delta_v_t__t_b_est(:,1), 'r')
     title('\deltav^t_t_b_,_x estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Velocity (m/s)')
     grid on
     subplot(3,1,2)
-    plot(t, out.delta_x_t__t_b_est.Data(:,5), 'g')
+    plot(t, out.delta_v_t__t_b_est(:,2), 'g')
     title('\deltav^t_t_b_,_y estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Velocity (m/s)')
     grid on
     subplot(3,1,3)
-    plot(t, out.delta_x_t__t_b_est.Data(:,6), 'b')
+    plot(t, out.delta_v_t__t_b_est(:,3), 'b')
     title('\deltav^t_t_b_,_z estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -63,25 +63,29 @@ end
 
 if (delta_psi_t__t_b_est_flag == true)
     
+    for ii = 1 : length(t)
+        [yaw(ii), pitch(ii), roll(ii)] = dcm2ypr(out.delta_C_t__b_est(:,:,ii));
+    end
+    
     figure
     hold on
     subplot(3,1,1)
-    plot(t, out.delta_x_t__t_b_est.Data(:,7) * 180/pi, 'r')
-    title('\delta\psi^t_t_b_,_x estimate')
+    plot(t, roll * 180/pi, 'r')
+    title('\delta\phi^t_t_b estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Roll (\circ)')
     grid on
     subplot(3,1,2)
-    plot(t, out.delta_x_t__t_b_est.Data(:,8) * 180/pi, 'g')
-    title('\delta\psi^t_t_b_,_y estimate')
+    plot(t, pitch * 180/pi, 'g')
+    title('\delta\theta^t_t_b estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Pitch (\circ)')
     grid on
     subplot(3,1,3)
-    plot(t, out.delta_x_t__t_b_est.Data(:,9) * 180/pi, 'b')
-    title('\delta\psi^t_t_b_,_z estimate')
+    plot(t, yaw * 180/pi, 'b')
+    title('\delta\psi^t_t_b estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('Yaw (\circ)')

@@ -92,7 +92,7 @@ if(a_truth_flag == true)
     ylabel('\theta (deg)')
     grid on
     subplot(3,1,3)
-    plot(t, rpy(3,:), 'b')
+    plot(t, unwrap(rpy(3,:)), 'b')
     title('TRUTH: Yaw')
     xlabel('Time (s)')
     xlim([0 P.t_end])

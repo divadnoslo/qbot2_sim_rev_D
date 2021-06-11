@@ -1,4 +1,4 @@
-function plot_meas(p_meas_flag, v_meas_flag, a_meas_flag, k_meas_flag, out, P)
+function plot_meas(p_meas_flag, v_meas_flag, a_meas_flag, out, P)
 %PLOT_MEAS Plots all things related to PVA measurements (not IMU)
 %   - Measured Position
 %   - Measured Velocity
@@ -67,7 +67,7 @@ if (a_meas_flag == true)
     ylabel('\theta (deg)')
     grid on
     subplot(3,1,3)
-    plot(t, rpy(3,:), 'b')
+    plot(t, unwrap(rpy(3,:)), 'b')
     title('MEAS: Yaw')
     xlabel('Time (s)')
     xlim([0 P.t_end])
@@ -77,36 +77,6 @@ if (a_meas_flag == true)
     
 end
 
-%% Plot Angle-Axis "k" Measured
-if (k_meas_flag == true)
-    
-    % Attitude (Euler Angles)
-    figure
-    hold on
-    subplot(3,1,1)
-    plot(t, out.k_t__t_b(:,1), 'r')
-    title('MEAS: k_1')
-    xlabel('Time (s)')
-    xlim([0 P.t_end])
-    ylabel('k_1')
-    grid on
-    subplot(3,1,2)
-    plot(t, out.k_t__t_b(:,2), 'g')
-    title('MEAS: k_2')
-    xlabel('Time (s)')
-    xlim([0 P.t_end])
-    ylabel('k_2')
-    grid on
-    subplot(3,1,3)
-    plot(t, out.k_t__t_b(:,3), 'b')
-    title('MEAS: k_3')
-    xlabel('Time (s)')
-    xlim([0 P.t_end])
-    ylabel('k_3')
-    grid on
-    hold off
-    
-end
 
 end
 

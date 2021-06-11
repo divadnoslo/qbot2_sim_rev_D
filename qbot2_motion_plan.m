@@ -219,7 +219,7 @@ if (P.plot_motion_plan_flag == true)
     
     figure
     subplot(2,1,1)
-    plot(t, yaw * 180/pi, 'b')
+    plot(t, unwrap(yaw * 180/pi), 'b')
     title('Motion Plan:  \psi^t_t_b')
     ylabel('\psi (\circ)')
     grid on
@@ -365,10 +365,10 @@ diameter = P.diameter;
 radius = diameter / 2;
 
 % Desired Angular Rate
-ang_rate = 2.5 * pi/180;
+ang_rate = 10 * pi/180;  % rad / s
 
 % Determine Angular Rate & Time
-heading_change = 0 : sign(psi_des) * ang_rate : psi_des;
+heading_change = 0 : (sign(psi_des) * ang_rate * dt) : psi_des;
 t_k = 0 : dt : ((length(heading_change)-1) * dt);
 w_b__t_b = repmat([0; 0; sign(psi_des) * ang_rate], 1, length(t_k));
 
@@ -383,8 +383,8 @@ v_b__t_b = zeros(3, length(t_k));
 a_b__t_b = zeros(3, length(t_k));
 
 % Determine Wheel Position
-r_w = [heading_change * radius; ...
-      -heading_change * radius];
+r_w = [(heading_change * radius); ...
+      (-heading_change * radius)];
 
 % Old Method
 %__________________________________________________________________________

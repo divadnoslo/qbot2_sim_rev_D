@@ -11,7 +11,7 @@ if (r_KF_flag == true)
     
     % Calculate Truth minus Error
     %r_error = out.delta_r_t__t_b.Data' - out.delta_x_t__t_b_est.Data(:,(1:3))';
-    r_error = out.P_truth.Data' - out.r_t__t_b_est.Data';
+    r_error = out.P_truth.Data' - out.r_t__t_b_est';
     
     figure
     subplot(3,1,1)
@@ -55,7 +55,7 @@ if (v_KF_flag == true)
     % Calculate Truth minus Error
     %v_error = out.delta_v_t__t_b.Data' - out.delta_x_t__t_b_est.Data(:,(4:6))';
     %v_error = out.delta_v_t__t_b.Data' - out.delta_x_t__t_b_est.Data(:,(4:6))';
-    v_error = out.V_truth.Data' - out.v_t__t_b_est.Data';
+    v_error = out.V_truth.Data' - out.v_t__t_b_est';
     
     figure
     subplot(3,1,1)
@@ -102,10 +102,23 @@ if (psi_KF_flag == true)
     psi_t__t_b_est = zeros(3,length(out.A_truth.Data));
     for i=1:length(out.A_truth.Data)
         [psi_t__t_b(3,i), psi_t__t_b(2,i), psi_t__t_b(1,i)] = dcm2ypr(out.A_truth.Data(:,:,i));
-        [psi_t__t_b_est(3,i), psi_t__t_b_est(2,1), psi_t__t_b_est(1,i)] = dcm2ypr(k2dcm(out.psi_t__t_b_est.Data(i,:)'));
+        [psi_t__t_b_est(3,i), psi_t__t_b_est(2,1), psi_t__t_b_est(1,i)] = dcm2ypr(out.C_t__b_est(:,:,i));
     end
+    
+    % Unwrap Vectors
+    psi_t__t_b = [unwrap(psi_t__t_b(1,:)); ...
+                  unwrap(psi_t__t_b(2,:)); ...
+                  unwrap(psi_t__t_b(3,:))];
+              
+    psi_t__t_b_est = [unwrap(psi_t__t_b_est(1,:)); ...
+                      unwrap(psi_t__t_b_est(2,:)); ...
+                      unwrap(psi_t__t_b_est(3,:))];
+    
+    % Calculate Error
     psi_error = psi_t__t_b - psi_t__t_b_est;
     
+    
+    % Begin Plots
     figure
     subplot(3,1,1)
     hold on

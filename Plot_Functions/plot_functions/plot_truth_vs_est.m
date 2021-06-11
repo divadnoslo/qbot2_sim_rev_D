@@ -8,7 +8,7 @@ if (r_flag == true)
     figure
     hold on
     subplot(3, 1, 1)
-    plot(t, out.r_t__t_b_est.Data(:,1), 'r', t, out.P_truth.Data(:,1), 'k')
+    plot(t, out.r_t__t_b_est(:,1), 'r', t, out.P_truth.Data(:,1), 'k')
     title('r^t_t_b_,_x   Truth vs. Estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -16,7 +16,7 @@ if (r_flag == true)
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 2)
-    plot(t, out.r_t__t_b_est.Data(:,2), 'g', t, out.P_truth.Data(:,2), 'k')
+    plot(t, out.r_t__t_b_est(:,2), 'g', t, out.P_truth.Data(:,2), 'k')
     title('r^t_t_b_,_y   Truth vs. Estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -24,7 +24,7 @@ if (r_flag == true)
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 3)
-    plot(t, out.r_t__t_b_est.Data(:,3), 'b', t, out.P_truth.Data(:,3), 'k')
+    plot(t, out.r_t__t_b_est(:,3), 'b', t, out.P_truth.Data(:,3), 'k')
     title('r^t_t_b_,_z   Truth vs. Estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -39,7 +39,7 @@ if (v_flag == true)
     figure
     hold on
     subplot(3, 1, 1)
-    plot(t, out.v_t__t_b_est.Data(:,1), 'r', t, out.V_truth.Data(:,1), 'k')
+    plot(t, out.v_t__t_b_est(:,1), 'r', t, out.V_truth.Data(:,1), 'k')
     title('v^t_t_b_,_x   Truth vs. Estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -47,7 +47,7 @@ if (v_flag == true)
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 2)
-    plot(t, out.v_t__t_b_est.Data(:,2), 'g', t, out.V_truth.Data(:,2), 'k')
+    plot(t, out.v_t__t_b_est(:,2), 'g', t, out.V_truth.Data(:,2), 'k')
     title('v^t_t_b_,_y   Truth vs. Estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -55,7 +55,7 @@ if (v_flag == true)
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 3)
-    plot(t, out.v_t__t_b_est.Data(:,3), 'b', t, out.V_truth.Data(:,3), 'k')
+    plot(t, out.v_t__t_b_est(:,3), 'b', t, out.V_truth.Data(:,3), 'k')
     title('v^t_t_b_,_z   Truth vs. Estimate')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -70,9 +70,9 @@ if (a_flag == true)
     [~, ~, rpy] = extract_PVA(out.P_truth.Data, out.V_truth.Data, ...
                                                         out.A_truth.Data);
     
-    % Convert k -> dcm -> ypr
-    for k = 1 : length(out.psi_t__t_b_est.Data)
-        [yaw(k), pitch(k), roll(k)] = dcm2ypr(k2dcm(out.psi_t__t_b_est.Data(k,:)'));
+    % Convert DCM to YPR
+    for k = 1 : length(t)
+        [yaw(k), pitch(k), roll(k)] = dcm2ypr(out.C_t__b_est(:,:,k));
     end
                                                     
     rpy = rpy * pi/180;                                                  
