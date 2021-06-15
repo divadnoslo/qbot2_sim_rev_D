@@ -14,25 +14,25 @@ if (delta_p_flag == true)
     figure
     hold on
     subplot(3,1,1)
-    plot(t, out.delta_r_t__t_b.Data(:,1), 'r')
-    title('Error in X-Position:  \deltar^t_t_b')
+    plot(t, out.Delta_r_t__t_b(:,1), 'r')
+    title('Position Error on X-Axis   (\Deltar^t_t_b_,_x)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Position (m)')
+    ylabel('m')
     grid on
     subplot(3,1,2)
-    plot(t, out.delta_r_t__t_b.Data(:,2), 'g')
-    title('Error in Y-Position:  \deltar^t_t_b')
+    plot(t, out.Delta_r_t__t_b(:,2), 'g')
+    title('Position Error on Y-Axis   (\Deltar^t_t_b_,_y)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Position (m)')
+    ylabel('m')
     grid on
     subplot(3,1,3)
-    plot(t, out.delta_r_t__t_b.Data(:,3), 'b')
-    title('Error in Z-Position:  \deltar^t_t_b')
+    plot(t, out.Delta_r_t__t_b(:,3), 'b')
+    title('Position Error on Z-Axis   (\Deltar^t_t_b_,_z)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Position (m)')
+    ylabel('m')
     grid on
     
 end
@@ -45,25 +45,25 @@ if (delta_v_flag == true)
     figure
     hold on
     subplot(3,1,1)
-    plot(t, out.delta_v_t__t_b.Data(:,1), 'r')
-    title('Error in X-Velocity:  \deltav^t_t_b')
+    plot(t, out.Delta_v_t__t_b(:,1), 'r')
+    title('Velocity Error on X-Axis   (\Deltav^t_t_b_,_x)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Velocity (m/s)')
+    ylabel('m/s')
     grid on
     subplot(3,1,2)
-    plot(t, out.delta_v_t__t_b.Data(:,2), 'g')
-    title('Error in Y-Velocity:  \deltav^t_t_b')
+    plot(t, out.Delta_v_t__t_b(:,2), 'g')
+    title('Velocity Error on Y-Axis   (\Deltav^t_t_b_,_y)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Velocity (m/s)')
+    ylabel('m/s')
     grid on
     subplot(3,1,3)
-    plot(t, out.delta_v_t__t_b.Data(:,3), 'b')
-    title('Error in Z-Velocity:  \deltav^t_t_b')
+    plot(t, out.Delta_v_t__t_b(:,3), 'b')
+    title('Velocity Error on Z-Axis   (\Deltav^t_t_b_,_z)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Velocity (m/s)')
+    ylabel('m/s')
     grid on
 
 end
@@ -75,25 +75,25 @@ if (delta_a_flag == true)
     figure
     hold on
     subplot(3,1,1)
-    plot(t, out.delta_psi_t__t_b.Data(:,1) * 180, 'r')
-    title('Error in Attitude (Roll):  \delta\psi^t_t_b')
+    plot(t, out.Delta_euler_t__t_b(:,1) * 180, 'r')
+    title('Roll Error   (\Delta\phi^t_t_b)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Roll (deg)')
+    ylabel('\circ')
     grid on
     subplot(3,1,2)
-    plot(t, out.delta_psi_t__t_b.Data(:,2) * 180, 'g')
-    title('Error in Attitude (Pitch):  \delta\psi^t_t_b')
+    plot(t, out.Delta_euler_t__t_b(:,2) * 180, 'g')
+    title('Pitch Error   (\Delta\theta^t_t_b)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Pitch (deg)')
+    ylabel('\circ')
     grid on
     subplot(3,1,3)
-    plot(t, out.delta_psi_t__t_b.Data(:,3) * 180, 'b')
-    title('Error in Attitude (Yaw):  \delta\psi^t_t_b')
+    plot(t, out.Delta_euler_t__t_b(:,3) * 180, 'b')
+    title('Yaw Error   (\Delta\psi^t_t_b)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('Yaw (deg)')
+    ylabel('\circ')
     grid on
 
 end

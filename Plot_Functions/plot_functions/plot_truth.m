@@ -1,6 +1,5 @@
-function plot_truth(motion_3D_flag, p_truth_flag, v_truth_flag, a_truth_flag, out, P)
-% Plots all plots related to Ground Truth, including
-%    - 3D Motion Plot
+function plot_truth(p_truth_flag, v_truth_flag, a_truth_flag, out, P)
+% Plots all plots related to Ground Truth, including:
 %    - True Position
 %    - True Velocity
 %    - True Attitude
@@ -8,48 +7,55 @@ function plot_truth(motion_3D_flag, p_truth_flag, v_truth_flag, a_truth_flag, ou
 % Extract Time
 t = out.tout;
 
-% Extract Variables
-[pos, vel, rpy] = extract_PVA(out.P_truth.Data, ...
-    out.V_truth.Data, ...
-    out.A_truth.Data);
-
-% 3D Motion Plot___________________________________________________________
-if (motion_3D_flag == true)
-    
-    % 3D Motion Plot
-    figure
-    hold on
-    plot3(pos(1,:), pos(2,:), pos(3,:), 'r', 'LineWidth', 2)
-    plot3(pos(1,:), pos(2,:), zeros(1,length(pos(1,:))), 'k')
-    plot3(linspace(min(pos(1,:)), max(pos(1,:)), length(pos(1,:))), ...
-        zeros(1,length(pos(2,:))), ...
-        zeros(1,length(pos(3,:))), 'b', 'LineWidth', 0.5)
-    plot3(zeros(1,length(pos(1,:))), ...
-        linspace(min(pos(2,:)), max(pos(2,:)), length(pos(2,:))), ...
-        zeros(1,length(pos(3,:))), 'b', 'LineWidth', 0.5)
-    title('Figure Eight Motion')
-    xlabel('X (m)')
-    ylabel('Y (m)')
-    zlabel('Z (m)')
-    grid on
-    view(10, 47)
-    hold off
-    
-end
+% Extract PVA
+pos = out.P_truth';
+vel = out.V_truth';
+rpy = out.A_truth';
 
 % Position Truth Plot______________________________________________________
 if (p_truth_flag == true)
     
-    % Position
+    % X-Position
+    k = 1;
     figure
     hold on
-    plot(t, pos(1,:), 'r', t, pos(2,:), 'g',t, pos(3,:), 'b')
-    title('TRUTH: Position (m)')
+    subplot(3,1,k)
+    plot(t, pos(k,:), 'r')
+    title('Ground Truth: r^t_t_b_,_x')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('r^t_tb (m)')
+    ylabel('r^t_t_b_,_x (m)')
+    ylim([min(pos(k,:)) - 0.1*min(pos(k,:)), ...
+          max(pos(k,:)) + 0.1*max(pos(k,:))])
     grid on
-    legend('r_x (m)', 'r_y (m)', 'r_z (m)', 'Location', 'Best')
+    hold off
+    
+    % Y-Position
+    k = 2;
+    hold on
+    subplot(3,1,k)
+    plot(t, pos(k,:), 'g')
+    title('Ground Truth: r^t_t_b_,_y')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+    ylabel('r^t_t_b_,_y (m)')
+    ylim([min(pos(k,:)) - 0.1*min(pos(k,:)), ...
+          max(pos(k,:)) + 0.1*max(pos(k,:))])
+    grid on
+    hold off
+    
+    % Z-Position
+    k = 3;
+    hold on
+    subplot(3,1,k)
+    plot(t, pos(k,:), 'b')
+    title('Ground Truth: r^t_t_b_,_z')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+    ylabel('r^t_t_b_,_z (m)')
+%     ylim([min(pos(k,:)) - 0.1*min(pos(k,:)), ...
+%           max(pos(k,:)) + 0.1*max(pos(k,:))])
+    grid on
     hold off
     
 end
@@ -57,16 +63,47 @@ end
 % Velocity Truth Plot______________________________________________________
 if (v_truth_flag == true)
     
-    % Velocity
+    % X-Velocity
+    k = 1;
     figure
     hold on
-    plot(t, vel(1,:), 'r', t, vel(2,:), 'g', t, vel(3,:), 'b')
-    title('TRUTH: Velocity (m/s)')
+    subplot(3,1,k)
+    plot(t, vel(k,:), 'r')
+    title('Ground Truth: v^t_t_b_,_x')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('vel (m/s)')
+    ylabel('v^t_t_b_,_x (m/s)')
+    ylim([min(vel(k,:)) - 0.1*min(vel(k,:)), ...
+          max(vel(k,:)) + 0.1*max(vel(k,:))])
     grid on
-    legend('v_x (m)', 'v_y (m)', 'v_z (m)', 'Location', 'Best')
+    hold off
+    
+    % Y-Velocity
+    k = 2;
+    hold on
+    subplot(3,1,k)
+    plot(t, vel(k,:), 'g')
+    title('Ground Truth: v^t_t_b_,_y')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+    ylabel('v^t_t_b_,_y (m/s)')
+    ylim([min(vel(k,:)) - 0.1*min(vel(k,:)), ...
+          max(vel(k,:)) + 0.1*max(vel(k,:))])
+    grid on
+    hold off
+    
+    % Z-Velocity
+    k = 3;
+    hold on
+    subplot(3,1,k)
+    plot(t, vel(k,:), 'b')
+    title('Ground Truth: v^t_t_b_,_z')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+    ylabel('v^t_t_b_,_z (m/s)')
+%     ylim([min(vel(k,:)) - 0.1*min(vel(k,:)), ...
+%           max(vel(k,:)) + 0.1*max(vel(k,:))])
+    grid on
     hold off
     
 end
@@ -74,31 +111,43 @@ end
 % Attitude Truth Plot______________________________________________________
 if(a_truth_flag == true)
     
-    % Attitude (Euler Angles)
+    % Roll
+    k = 1;
     figure
     hold on
-    subplot(3,1,1)
-    plot(t, rpy(1,:), 'r')
-    title('TRUTH: Roll')
+    subplot(3,1,k)
+    plot(t, rpy(k,:) * 180/pi, 'r')
+    title('Ground Truth: Roll (\phi^t_t_b)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('\phi (deg)')
+%     ylim([min(rpy(k,:) * 180/pi) - 0.1*min(rpy(k,:) * 180/pi), ...
+%           max(rpy(k,:) * 180/pi) + 0.1*max(rpy(k,:) * 180/pi)])
+    ylabel('\phi^t_t_b (\circ)')
     grid on
-    subplot(3,1,2)
-    plot(t, rpy(2,:), 'g')
-    title('TRUTH: Pitch')
+    
+    % Pitch
+    k = 2;
+    subplot(3,1,k)
+    plot(t, rpy(k,:) * 180/pi, 'g')
+    title('Ground Truth: Pitch (\theta^t_t_b)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('\theta (deg)')
+    ylabel('\theta^t_t_b (\circ)')
+%     ylim([min(rpy(k,:) * 180/pi) - 0.1*min(rpy(k,:) * 180/pi), ...
+%           max(rpy(k,:) * 180/pi) + 0.1*max(rpy(k,:) * 180/pi)])
     grid on
-    subplot(3,1,3)
-    plot(t, unwrap(rpy(3,:)), 'b')
-    title('TRUTH: Yaw')
+    
+    % Yaw
+    k = 3;
+    subplot(3,1,k)
+    plot(t, rpy(k,:) * 180/pi, 'b')
+    title('Ground Truth: Yaw (\psi^t_t_b)')
     xlabel('Time (s)')
     xlim([0 P.t_end])
-    ylabel('\psi (deg)')
+    ylabel('\psi^t_t_b (\circ)')
+    ylim([min(rpy(k,:) * 180/pi) - 0.1*min(rpy(k,:) * 180/pi), ...
+          max(rpy(k,:) * 180/pi) + 0.1*max(rpy(k,:) * 180/pi)])
     grid on
-    hold off
     
 end
     

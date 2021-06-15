@@ -5,11 +5,6 @@
 %% Qbot 2 Simulation Model Parameters
 P.Fs  = 50;                 % Sample frequency (Hz)
 P.dt  = 1/P.Fs;             % Sample interval (sec)
-P.t_start = 0;              % Simulation start time (sec)
-P.t_end = 60;               % Simulation end time (sec)
-
-P.fidelity = 1;             % Tan_Mech Attitude Update Parameter 
-                            % (0 for low fidelity, 1 for high fidelity)
 
 %% Qbot 2 Physical Specs (from datasheet)
 P.mass = 4.5; % kg
@@ -27,7 +22,8 @@ P.sigma_odo_d = P.sigma_angle * P.wheel_radius; % m
 P.odo_error_flag = true;  % toggle to turn on/off odometry error sources
 
 % Complimentary Filter Constants
-w_c = 2.5 * (2*pi);  % rad/s
+P.use_comp_filter = false;
+w_c = 15 * (2*pi);  % rad/s
 lpf = tf([w_c], [1 w_c]);
 lpf_d = c2d(lpf, P.dt, 'tustin');
 P.lpf_num_1 = lpf_d.Numerator{1}(1);

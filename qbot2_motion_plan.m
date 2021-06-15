@@ -1,15 +1,26 @@
 %% Qbot 2 Motion Plan
 
+%**************************************************************************
+%
+% Uncomment/comment the motion profile you wish to use, or write your own
+% using the examples below.  
+%
 % 3 Modes of Travel
 % 'Mode 1' = stationary -> amount of time paused (sec)
 % 'Mode 2' = angular    -> amount of angle psi to turn (rad) (NED Frame)
 % 'Mode 3' = linear     -> distance forward to drive (meters)
+%
+%**************************************************************************
 
+%*** Debugging Cases ***
+%__________________________________________________________________________
 % % Staying Still for an amount of time
-% P.motion_plan = {"Mode 1", 10 * 60};
+% P.motion_plan = {"Mode 1", 180};
 
 % % Moving Forward for 30 meters
-% P.motion_plan = {"Mode 3", 30};
+% P.motion_plan = {"Mode 1", 5; ...
+%                  "Mode 3", 15; ...
+%                  "Mode 1", 5};
 
 % % Rotate in Place 4 Times
 % P.motion_plan = {"Mode 2", 32*pi};
@@ -37,9 +48,15 @@
 %                  "Mode 2", -pi/2; ...
 %                  "Mode 3", 1; ...
 %                  "Mode 2", -pi/2};
- 
+%__________________________________________________________________________
+
+
+
+%*** Hardware Test Cases ***
+%__________________________________________________________________________
 % % Simple Test Case 1 -- CCW
-% P.motion_plan = {"Mode 3",     2.8; ...
+% P.motion_plan = {"Mode 1",     10; ...
+%                  "Mode 3",     2.8; ...
 %                  "Mode 2",    -pi/2; ...
 %                  "Mode 3",     2.8; ...
 %                  "Mode 2",    -pi/2;...
@@ -47,10 +64,11 @@
 %                  "Mode 2",    -pi/2; ...
 %                  "Mode 3",     2.8; ...
 %                  "Mode 2",    -pi/2; ...
-%                  "Mode 1",     5};
+%                  "Mode 1",     10};
 
 % Simple Test Case 2 -- CW
-P.motion_plan = {"Mode 3",     2.8; ...
+P.motion_plan = {"Mode 1",     10; ...
+                 "Mode 3",     2.8; ...
                  "Mode 2",     pi/2; ...
                  "Mode 3",     2.8; ...
                  "Mode 2",     pi/2;...
@@ -58,10 +76,11 @@ P.motion_plan = {"Mode 3",     2.8; ...
                  "Mode 2",     pi/2; ...
                  "Mode 3",     2.8; ...
                  "Mode 2",     pi/2; ...
-                 "Mode 1",     5};
+                 "Mode 1",     10};
 
 % % King Building Hallway Mock-up
-% P.motion_plan = {"Mode 3",     15.5448; ...
+% P.motion_plan = {"Mode 1",     10; ...
+%                  "Mode 3",     15.5448; ...
 %                  "Mode 2",     -pi/4; ...
 %                  "Mode 3",     11.3919; ...
 %                  "Mode 2",     -pi/4;...
@@ -74,33 +93,35 @@ P.motion_plan = {"Mode 3",     2.8; ...
 %                  "Mode 3",     23.8252; ...
 %                  "Mode 2",     -pi/2; ...
 %                  "Mode 3",     3.2385; ...
-%                  "Mode 1",     5};
-             
-%% Build Motion Plan
-% Variables to Consider
+%                  "Mode 1",     10};
+%__________________________________________________________________________
 
+%% Build Motion Plan
+
+% Initialze Position, Heading, and Odometry Start Points
 [num_steps, ~] = size(P.motion_plan);
 r_t__t_b_old = [0; 0; 0];
-C_t__b_old = eye(3);
+psi_t__t_b_old = 0;
 r_wheel_old = [0; 0];
 
+% For Each Step of the Motion Plan
 for ii = 1 : num_steps
     
     % Generate body frame motion according to mode of travel
     if (P.motion_plan{ii,1} == "Mode 1")
-        [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, C_b__b_1, w_b__t_b] = ...
+        [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, psi, w_b__t_b] = ...
            qbot2_stationary_motion_gen(P.motion_plan{ii,2}, P);
     elseif (P.motion_plan{ii,1} == "Mode 2")
-        [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, C_b__b_1, w_b__t_b] = ...
+        [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, psi, w_b__t_b] = ...
               qbot2_angular_motion_gen(P.motion_plan{ii,2}, P);
     elseif (P.motion_plan{ii,1} == "Mode 3")
-        [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, C_b__b_1, w_b__t_b] = ...
+        [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, psi, w_b__t_b] = ...
                qbot2_linear_motion_gen(P.motion_plan{ii,2}, P);
     else
         error('Mode of Motion not recognized, check your spelling')
     end
     
-    % Build Corect indexes and time vectors
+    % Build indexes and time vectors
     if (ii == 1)
         t = t_k;
         k = 1 : length(t_k);
@@ -113,13 +134,13 @@ for ii = 1 : num_steps
         t = [t, (t(end) + P.dt + t_k)];
     end
     
-    % Bring Body Motions into the Tangential Frame
+    % Convert Body Motions into the Tangential Frame
     for jj = k_next
-        C_t__b(:,:,jj) = C_b__b_1(:,:,jj-k_prev) * C_t__b_old;
-        a_t__t_b(1:3,jj) = C_t__b(:,:,jj) * a_b__t_b(:,jj-k_prev);
-        v_t__t_b(1:3,jj) = C_t__b(:,:,jj) * v_b__t_b(:,jj-k_prev);
-        r_t__t_b(1:3,jj) = C_t__b(:,:,jj) * r_b__t_b(:,jj-k_prev) + r_t__t_b_old;
-        w_t__t_b(1:3,jj) = C_t__b(:,:,jj) * w_b__t_b(:,jj-k_prev);
+        psi_t__t_b(1,jj) = psi(1,jj-k_prev) + psi_t__t_b_old;
+        a_t__t_b(1:3,jj) = rotate_z(psi_t__t_b(1,jj)) * a_b__t_b(:,jj-k_prev);
+        v_t__t_b(1:3,jj) = rotate_z(psi_t__t_b(1,jj)) * v_b__t_b(:,jj-k_prev);
+        r_t__t_b(1:3,jj) = rotate_z(psi_t__t_b(1,jj)) * r_b__t_b(:,jj-k_prev) + r_t__t_b_old;
+        w_t__t_b(1:3,jj) = rotate_z(psi_t__t_b(1,jj)) * w_b__t_b(:,jj-k_prev);
         r_wheel(1:2,jj)  = r_w(:,jj-k_prev) + r_wheel_old;
         
         % Passing Mode
@@ -133,19 +154,20 @@ for ii = 1 : num_steps
     end
     
     % Capture End State for next instruction
-    C_t__b_old = C_t__b(:,:,k_next(end));
+    psi_t__t_b_old = psi_t__t_b(1,k_next(end));
     r_t__t_b_old = r_t__t_b(:,k_next(end));
     r_wheel_old = [r_wheel(1,end); r_wheel(2,end)];
     
 end
 
 %% Save Results into Structure P
+% These structure fields are passed into the simulation "Body-in-Tan" block
 
 P.ind = k;
 P.r_t__t_b = r_t__t_b;
 P.v_t__t_b = v_t__t_b;
 P.a_t__t_b = a_t__t_b;
-P.C_t__b = C_t__b;
+P.psi_t__t_b = psi_t__t_b;
 P.w_t__t_b = w_t__t_b;
 P.t_end = t(end);
 P.r_wheel = r_wheel;
@@ -158,6 +180,7 @@ if (P.plot_motion_plan_flag == true)
     C_v__t = rotate_x(pi);
     r_v__t_b = C_v__t * r_t__t_b;
     
+    % Bird's Eye View
     figure
     hold on
     plot3(r_v__t_b(1,:), r_v__t_b(2,:), r_v__t_b(3,:))
@@ -171,6 +194,7 @@ if (P.plot_motion_plan_flag == true)
     ylabel('Y')
     grid on
     
+    % Position, Velocity, and Acceleration in X-Direction
     figure
     subplot(3,1,1)
     plot(t, r_t__t_b(1,:), 'r')
@@ -192,6 +216,7 @@ if (P.plot_motion_plan_flag == true)
     grid on
     xlim([0 t(end)])
     
+    % Position, Velocity, and Acceleration in Y-Direction
     figure
     subplot(3,1,1)
     plot(t, r_t__t_b(2,:), 'g')
@@ -213,30 +238,29 @@ if (P.plot_motion_plan_flag == true)
     grid on
     xlim([0 t(end)])
     
-    for kk = 1 : length(t)
-        [yaw(kk), ~, ~] = dcm2ypr(C_t__b(:,:,kk));
-    end
-    
+    % Heading & Angular Velocity
     figure
     subplot(2,1,1)
-    plot(t, unwrap(yaw * 180/pi), 'b')
+    plot(t, psi_t__t_b * 180/pi, 'b')
     title('Motion Plan:  \psi^t_t_b')
     ylabel('\psi (\circ)')
     grid on
     xlim([0 t(end)])
     subplot(2,1,2)
     plot(t, w_t__t_b(3,:) * 180/pi, 'b')
-    title('Motion Plan:  w^t_t_b_,_z')
-    ylabel('w_z (\circ/s)')
+    title('Motion Plan:  \omega^t_t_b_,_z')
+    ylabel('\omega_z (\circ/s)')
     grid on
     xlim([0 t(end)])
     
+    % Odometry True Measurements
     figure
     hold on
     plot(t, r_wheel(1,:), 'g')
     plot(t, r_wheel(2,:), 'r')
     title('Qbot2 Wheel Position')
     xlabel('Time (s)')
+    xlim([0 t(end)])
     ylabel('Arc Length Turned (m)')
     legend('Left Wheel', 'Right Wheel', 'Location', 'Best')
     grid on
@@ -250,29 +274,26 @@ clear num_steps plot_motion_flag r_b__t_b r_t__t_b r_t__t_b_old t t_k
 clear v_b__t_b v_t__t_b w_b__t_b w_t__t_b yaw ans C_v__t r_v__t_b r_w
 clear r_wheel r_wheel_old mode
 P = rmfield(P, 'motion_plan');
+clear psi psi_t__t_b psi_t__t_b_old
 
 %% Stationary Motion Generation Function
 
-function [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, C_t__b, w_b__t_b] = ...
+function [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, psi, w_b__t_b] = ...
                      qbot2_stationary_motion_gen(time_pause, P)
 
 t_k = 0 : P.dt : time_pause;                 
 r_b__t_b = zeros(3,1,length(t_k));
 v_b__t_b = zeros(3,1,length(t_k));
 a_b__t_b = zeros(3,1,length(t_k));
+psi = zeros(1, length(t_k));
 w_b__t_b = zeros(3,1,length(t_k));
 r_w = zeros(2, length(t_k));
-                 
-for k = 1 : length(0:P.dt:time_pause)
-    C_t__b(:,:,k) = eye(3);
-    a_b__t_b(:,k) = zeros(3,1);
-end
 
 end
 
 %% Linear Motion Generation
 
-function [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, C_t__b, w_b__t_b] = ...
+function [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, psi, w_b__t_b] = ...
                               qbot2_linear_motion_gen(r_des, P)
 
 dt = P.dt;
@@ -345,9 +366,7 @@ end
 r_b__t_b = [r_l; zeros(2,length(t_k))];
 v_b__t_b = [v_l; zeros(2,length(t_k))];
 a_b__t_b = [a_l; zeros(2,length(t_k))];
-for k = 1 : length(t_k)
-    C_t__b(:,:,k) = eye(3);
-end
+psi = zeros(1, length(t_k));
 w_b__t_b = zeros(3, length(t_k));
 r_w = [r_l; r_l];
 
@@ -355,7 +374,7 @@ end
 
 %% Angular Motion Generation
 
-function [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, C_t__b, w_b__t_b] = ...
+function [t_k, r_w, r_b__t_b, v_b__t_b, a_b__t_b, psi, w_b__t_b] = ...
                           qbot2_angular_motion_gen(psi_des, P)
 
 dt = P.dt;
@@ -365,16 +384,16 @@ diameter = P.diameter;
 radius = diameter / 2;
 
 % Desired Angular Rate
-ang_rate = 10 * pi/180;  % rad / s
+ang_rate = 5 * pi/180;  % rad / s
 
 % Determine Angular Rate & Time
-heading_change = 0 : (sign(psi_des) * ang_rate * dt) : psi_des;
-t_k = 0 : dt : ((length(heading_change)-1) * dt);
+psi = 0 : (sign(psi_des) * ang_rate * dt) : psi_des;
+t_k = 0 : dt : ((length(psi)-1) * dt);
 w_b__t_b = repmat([0; 0; sign(psi_des) * ang_rate], 1, length(t_k));
 
 % Determine Attitude
 for ii = 1 : length(t_k)
-    C_t__b(1:3,1:3,ii) = rotate_z(heading_change(ii));
+    C_t__b(1:3,1:3,ii) = rotate_z(psi(ii));
 end
 
 % Determine Position, Velocity, Acceleration
@@ -383,8 +402,8 @@ v_b__t_b = zeros(3, length(t_k));
 a_b__t_b = zeros(3, length(t_k));
 
 % Determine Wheel Position
-r_w = [(heading_change * radius); ...
-      (-heading_change * radius)];
+r_w = [(psi * radius); ...
+      (-psi * radius)];
 
 % Old Method
 %__________________________________________________________________________

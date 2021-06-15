@@ -8,6 +8,10 @@
 %     clear P
 % end
 
+close all
+clear all
+clc
+
 % Add Folders to Path
 addpath('IMU_Cal_Data', 'Nav_Functions', ...
         'Plot_Functions', 'Plot_Functions/plot_functions')
@@ -25,7 +29,7 @@ P.IMU_prop_flag = true; % set to false for monte carlo
 IMU_Error_Properties;
 
 % Load Qbot 2 Motion Plan
-P.plot_motion_plan_flag = true; 
+P.plot_motion_plan_flag = false; 
 qbot2_motion_plan;
 
 % Plotting Flag

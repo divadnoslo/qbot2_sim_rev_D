@@ -8,27 +8,27 @@ if (r_flag == true)
     figure
     hold on
     subplot(3, 1, 1)
-    plot(t, out.r_t__t_b_est(:,1), 'r', t, out.P_truth.Data(:,1), 'k')
-    title('r^t_t_b_,_x   Truth vs. Estimate')
+    plot(t, out.r_t__t_b_est(:,1), 'r', t, out.P_truth(:,1), 'k')
+    title('Truth vs. Estimate:   r^t_t_b_,_x')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Position (m)')
+    ylabel('m')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 2)
-    plot(t, out.r_t__t_b_est(:,2), 'g', t, out.P_truth.Data(:,2), 'k')
-    title('r^t_t_b_,_y   Truth vs. Estimate')
+    plot(t, out.r_t__t_b_est(:,2), 'g', t, out.P_truth(:,2), 'k')
+    title('Truth vs. Estimate:   r^t_t_b_,_y')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Position (m)')
+    ylabel('m')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 3)
-    plot(t, out.r_t__t_b_est(:,3), 'b', t, out.P_truth.Data(:,3), 'k')
-    title('r^t_t_b_,_z   Truth vs. Estimate')
+    plot(t, out.r_t__t_b_est(:,3), 'b', t, out.P_truth(:,3), 'k')
+    title('Truth vs. Estimate:   r^t_t_b_,_z')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Position (m)')
+    ylabel('m')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     
@@ -39,27 +39,27 @@ if (v_flag == true)
     figure
     hold on
     subplot(3, 1, 1)
-    plot(t, out.v_t__t_b_est(:,1), 'r', t, out.V_truth.Data(:,1), 'k')
-    title('v^t_t_b_,_x   Truth vs. Estimate')
+    plot(t, out.v_t__t_b_est(:,1), 'r', t, out.V_truth(:,1), 'k')
+    title('Truth vs. Estimate:   v^t_t_b_,_x')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Velocity (m/s)')
+    ylabel('m/s')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 2)
-    plot(t, out.v_t__t_b_est(:,2), 'g', t, out.V_truth.Data(:,2), 'k')
-    title('v^t_t_b_,_y   Truth vs. Estimate')
+    plot(t, out.v_t__t_b_est(:,2), 'g', t, out.V_truth(:,2), 'k')
+    title('Truth vs. Estimate:   v^t_t_b_,_y')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Velocity (m/s)')
+    ylabel('m/s')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 3)
-    plot(t, out.v_t__t_b_est(:,3), 'b', t, out.V_truth.Data(:,3), 'k')
-    title('v^t_t_b_,_z   Truth vs. Estimate')
+    plot(t, out.v_t__t_b_est(:,3), 'b', t, out.V_truth(:,3), 'k')
+    title('Truth vs. Estimate:   v^t_t_b_,_z')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Velocity (m/s)')
+    ylabel('m/s')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     
@@ -67,40 +67,38 @@ end
     
 if (a_flag == true)
     
-    [~, ~, rpy] = extract_PVA(out.P_truth.Data, out.V_truth.Data, ...
-                                                        out.A_truth.Data);
-    
     % Convert DCM to YPR
     for k = 1 : length(t)
         [yaw(k), pitch(k), roll(k)] = dcm2ypr(out.C_t__b_est(:,:,k));
     end
-                                                    
-    rpy = rpy * pi/180;                                                  
+     
+    % Unwrap Yaw from Estimates
+    yaw = unwrap(yaw);                                                  
                                                     
     figure
     hold on
     subplot(3, 1, 1)
-    plot(t, roll * 180/pi, 'r', t, rpy(1,:) * 180/pi, 'k')
-    title('\psi^t_t_b_,_\phi   Truth vs. Estimate')
+    plot(t, roll * 180/pi, 'r', t, out.A_truth(:,1) * 180/pi, 'k')
+    title('Truth vs. Estimate:   \phi^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Roll (\circ)')
+    ylabel('\circ')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 2)
-    plot(t, pitch * 180/pi, 'g', t, rpy(2,:) * 180/pi, 'k')
-    title('\psi^t_t_b_,_\theta   Truth vs. Estimate')
+    plot(t, pitch * 180/pi, 'g', t, out.A_truth(:,2) * 180/pi, 'k')
+    title('Truth vs. Estimate:   \theta^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Pitch (\circ)')
+    ylabel('\circ')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     subplot(3, 1, 3)
-    plot(t, unwrap(yaw * 180/pi), 'b', t, unwrap(rpy(3,:) * 180/pi), 'k')
-    title('\psi^t_t_b_,_\psi   Truth vs. Estimate')
+    plot(t, yaw * 180/pi, 'b', t, out.A_truth(:,3) * 180/pi, 'k')
+    title('Truth vs. Estimate:   \psi^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
-    ylabel('Yaw (\circ)')
+    ylabel('\circ')
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     

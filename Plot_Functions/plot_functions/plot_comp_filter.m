@@ -2,10 +2,10 @@ function plot_comp_filter(comp_filt_flag, psd_plot_flag, plot_omega_z_only, out,
 
 
 % Isolate the separate angular velocities
-w_true = out.w_t__t_b_true.Data;
-w_imu = out.w_t__t_b_imu.Data;
-w_odo = out.w_t__t_b_odo.Data;
-w_comp = out.w_t__t_b_comp.Data;
+w_true = out.w_t__t_b_true;
+w_imu = out.w_t__t_b_imu;
+w_odo = out.w_t__t_b_odo;
+w_comp = out.w_t__t_b_comp;
 t = out.tout;
 
 if (comp_filt_flag == true)
@@ -140,7 +140,7 @@ if (plot_omega_z_only == true)
     grid on
     hold off
     subplot(2,1,2)
-    w_lpf = out.w_t__t_b_lpf.Data(:,3);
+    w_lpf = out.w_t__t_b_lpf(:,3);
     hold on
     plot(t, w_lpf * 180/pi, 'b')
     str1 = ['E[\omega_z_,_l_p_f] = ', num2str(mean(w_lpf * 180/pi)), ' \circ/s  '];

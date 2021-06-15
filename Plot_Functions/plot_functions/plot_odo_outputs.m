@@ -10,9 +10,9 @@ if (plot_ang_vel_odo == true)
     
     figure
     hold on
-    plot(t, out.w_t__t_b_odo.Data(:,3) * 180/pi, 'b') 
-    plot(t, out.w_t__t_b_comp.Data(:,3) * 180/pi, 'r')
-    plot(t, out.w_t__t_b_true.Data(:,3) * 180/pi, 'k')
+    plot(t, out.w_t__t_b_odo(:,3) * 180/pi, 'b') 
+    plot(t, out.w_t__t_b_comp(:,3) * 180/pi, 'r')
+    plot(t, out.w_t__t_b_true(:,3) * 180/pi, 'k')
     title('\omega_z_,_o_d_o vs. \omega_z_,_t_r_u_t_h')
     xlabel('Time (s)')
     xlim([0, P.t_end])
@@ -28,7 +28,7 @@ end
 if (plot_body_speed_odo == true)
     
     for k = 1 : length(t)
-        body_speed_truth(k) = sqrt(out.V_truth.Data(k,1)^2 + out.V_truth.Data(k,2)^2);
+        body_speed_truth(k) = sqrt(out.V_truth(k,1)^2 + out.V_truth(k,2)^2);
     end
     
     figure
@@ -49,15 +49,14 @@ end
 if (plot_C_t__b_comp == true)
     
     for k = 1 : length(t)
-        [yaw_truth(k), pitch_truth(k), roll_truth(k)] = dcm2ypr(out.A_truth.Data(:,:,k));
-        [yaw_meas(k), pitch_meas(k), roll_meas(k)] = dcm2ypr(out.A_meas.Data(:,:,k));
+        [yaw_meas(k), pitch_meas(k), roll_meas(k)] = dcm2ypr(out.A_meas(:,:,k));
     end
     
     figure
     subplot(3,1,1)
     hold on
     plot(t, roll_meas * 180/pi, 'r')    
-    plot(t, roll_truth * 180/pi, 'k')
+    plot(t, out.A_truth(:,1) * 180/pi, 'k')
     title('\phi_c_o_m_p vs. \phi_t_r_u_t_h')
     xlabel('Time (s)')
     xlim([0, P.t_end])
@@ -67,7 +66,7 @@ if (plot_C_t__b_comp == true)
     subplot(3,1,2)
     hold on
     plot(t, pitch_meas * 180/pi, 'g')    
-    plot(t, pitch_truth * 180/pi, 'k')
+    plot(t, out.A_truth(:,2) * 180/pi, 'k')
     title('\theta_c_o_m_p vs. \theta_t_r_u_t_h')
     xlabel('Time (s)')
     xlim([0, P.t_end])
@@ -77,7 +76,7 @@ if (plot_C_t__b_comp == true)
     subplot(3,1,3)
     hold on
     plot(t, unwrap(yaw_meas) * 180/pi, 'b')    
-    plot(t, unwrap(yaw_truth) * 180/pi, 'k')
+    plot(t, out.A_truth(:,3) * 180/pi, 'k')
     title('\psi_c_o_m_p vs. \psi_t_r_u_t_h')
     xlabel('Time (s)')
     xlim([0, P.t_end])
@@ -95,7 +94,7 @@ if (plot_tan_speed_odo == true)
     subplot(3,1,1)
     hold on
     plot(t, out.v_t__t_b_odo(:,1), 'r')    
-    plot(t, out.V_meas.Data(:,1), 'k')
+    plot(t, out.V_truth(:,1), 'k')
     title('v^t_t_b_,_x Odo vs. Truth')
     xlabel('Time (s)')
     xlim([0, P.t_end])
@@ -105,7 +104,7 @@ if (plot_tan_speed_odo == true)
     subplot(3,1,2)
     hold on
     plot(t, out.v_t__t_b_odo(:,2), 'g')    
-    plot(t, out.V_meas.Data(:,2), 'k')
+    plot(t, out.V_truth(:,2), 'k')
     title('v^t_t_b_,_y Odo vs. Truth')
     xlabel('Time (s)')
     xlim([0, P.t_end])
@@ -115,7 +114,7 @@ if (plot_tan_speed_odo == true)
     subplot(3,1,3)
     hold on
     plot(t, out.v_t__t_b_odo(:,3), 'b')    
-    plot(t, out.V_meas.Data(:,3), 'k')
+    plot(t, out.V_truth(:,3), 'k')
     title('v^t_t_b_,_z Odo vs. Truth')
     xlabel('Time (s)')
     xlim([0, P.t_end])
