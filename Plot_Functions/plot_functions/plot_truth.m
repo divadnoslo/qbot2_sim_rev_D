@@ -1,4 +1,4 @@
-function plot_truth(p_truth_flag, v_truth_flag, a_truth_flag, out, P)
+function plot_truth(p_truth_flag, v_truth_flag, a_truth_flag, w_truth_flag, out, P)
 % Plots all plots related to Ground Truth, including:
 %    - True Position
 %    - True Velocity
@@ -109,7 +109,7 @@ if (v_truth_flag == true)
 end
 
 % Attitude Truth Plot______________________________________________________
-if(a_truth_flag == true)
+if (a_truth_flag == true)
     
     % Roll
     k = 1;
@@ -150,7 +150,49 @@ if(a_truth_flag == true)
     grid on
     
 end
+   
+% Angular Velocity Truth Plot______________________________________________________
+if (w_truth_flag == true)
     
+    % Roll
+    k = 1;
+    figure
+    hold on
+    subplot(3,1,k)
+    plot(t, out.w_t__t_b_true(:,k) * 180/pi, 'r')
+    title('Ground Truth: Angular Velocity (\omega^t_t_b_,_x)')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+%     ylim([min(rpy(k,:) * 180/pi) - 0.1*min(rpy(k,:) * 180/pi), ...
+%           max(rpy(k,:) * 180/pi) + 0.1*max(rpy(k,:) * 180/pi)])
+    ylabel('\omega^t_t_b_,_x (\circ/s)')
+    grid on
+    
+    % Pitch
+    k = 2;
+    subplot(3,1,k)
+    plot(t, out.w_t__t_b_true(:,k) * 180/pi, 'g')
+    title('Ground Truth: Angular Velocity (\omega^t_t_b_,_y)')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+    ylabel('\omega^t_t_b_,_y (\circ/s)')
+%     ylim([min(rpy(k,:) * 180/pi) - 0.1*min(rpy(k,:) * 180/pi), ...
+%           max(rpy(k,:) * 180/pi) + 0.1*max(rpy(k,:) * 180/pi)])
+    grid on
+    
+    % Yaw
+    k = 3;
+    subplot(3,1,k)
+    plot(t, out.w_t__t_b_true(:,k) * 180/pi, 'b')
+    title('Ground Truth: Angular Velocity (\omega^t_t_b_,_z)')
+    xlabel('Time (s)')
+    xlim([0 P.t_end])
+    ylabel('\omega^t_t_b_,_z (\circ/s)')
+%     ylim([min(rpy(k,:) * 180/pi) - 0.1*min(rpy(k,:) * 180/pi), ...
+%           max(rpy(k,:) * 180/pi) + 0.1*max(rpy(k,:) * 180/pi)])
+    grid on
+    
+end
 
 end
 
