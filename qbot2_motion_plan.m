@@ -386,7 +386,7 @@ diameter = P.diameter;
 radius = diameter / 2;
 
 % Desired Angular Rate
-ang_rate = 5 * pi/180;  % rad / s
+ang_rate = 0.1 / radius;  % rad / s
 
 % Determine Angular Rate & Time
 psi = 0 : (sign(psi_des) * ang_rate * dt) : psi_des;

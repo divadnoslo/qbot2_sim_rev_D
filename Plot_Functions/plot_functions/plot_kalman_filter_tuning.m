@@ -1,4 +1,4 @@
-function plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, meas_flag, out, P)
+function plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, meas_flag, kalman_gains_flag, out, P)
 % Plots truth minus estimate for error, w/ Covariance Matrix
 
 % Extract Time
@@ -203,6 +203,109 @@ if (meas_flag == true)
     
 end
     
+% Kalman Gains
+if (kalman_gains_flag == true)
+    
+    % Format K_____________________________________________________________
+    
+    [k_r, k_v, k_a] = format_K(out.kalman_gains);
+    
+    % Position_____________________________________________________________
+    figure
+    subplot(3,1,1)
+    plot(t, k_r(1,:), 'm', ...
+         t, k_r(2,:), 'g', ...
+         t, k_r(3,:), 'c')
+    title('Kalman Gains:  X-Position')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    subplot(3,1,2)
+    plot(t, k_r(4,:), 'm', ...
+         t, k_r(5,:), 'g', ...
+         t, k_r(6,:), 'c')
+    title('Kalman Gains:  Y-Position')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    subplot(3,1,3)
+    plot(t, k_r(7,:), 'm', ...
+         t, k_r(8,:), 'g', ...
+         t, k_r(9,:), 'c')
+    title('Kalman Gains:  Z-Position')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
 
+    
+    % Velocity_____________________________________________________________
+    figure
+    subplot(3,1,1)
+    plot(t, k_v(1,:), 'm', ...
+         t, k_v(2,:), 'g', ...
+         t, k_v(3,:), 'c')
+    title('Kalman Gains:  X-Velocity')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    subplot(3,1,2)
+    plot(t, k_v(4,:), 'm', ...
+         t, k_v(5,:), 'g', ...
+         t, k_v(6,:), 'c')
+    title('Kalman Gains:  Y-Velocity')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    subplot(3,1,3)
+    plot(t, k_v(7,:), 'm', ...
+         t, k_v(8,:), 'g', ...
+         t, k_v(9,:), 'c')
+    title('Kalman Gains:  Z-Velocity')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    % Attitude_____________________________________________________________
+    figure
+    subplot(3,1,1)
+    plot(t, k_a(1,:), 'm', ...
+         t, k_a(2,:), 'g', ...
+         t, k_a(3,:), 'c')
+    title('Kalman Gains:  Angle Axis Comp. k_x')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    subplot(3,1,2)
+    plot(t, k_a(4,:), 'm', ...
+         t, k_a(5,:), 'g', ...
+         t, k_a(6,:), 'c')
+    title('Kalman Gains:  Angle Axis Comp. k_y')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
+    
+    subplot(3,1,3)
+    plot(t, k_a(7,:), 'm', ...
+         t, k_a(8,:), 'g', ...
+         t, k_a(9,:), 'c')
+    title('Kalman Gains:  Angle Axis Comp. k_z')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('K gains')
+    grid on
 
+end
 

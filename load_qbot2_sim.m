@@ -32,5 +32,8 @@ IMU_Error_Properties;
 P.plot_motion_plan_flag = false; 
 qbot2_motion_plan;
 
+% Run Aiding Configuration Script
+aiding_sensor_config;
+
 % Plotting Flag
 P.plotsim_flag = true;

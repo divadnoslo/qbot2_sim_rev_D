@@ -22,7 +22,6 @@ P.sigma_odo_d = P.sigma_angle * P.wheel_radius; % m
 P.odo_error_flag = true;  % toggle to turn on/off odometry error sources
 
 % Complimentary Filter Constants
-P.use_comp_filter = false;
 w_c = 2.5 * (2*pi);  % rad/s
 lpf = tf([w_c], [1 w_c]);
 lpf_d = c2d(lpf, P.dt, 'tustin');

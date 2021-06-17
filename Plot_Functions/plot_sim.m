@@ -17,7 +17,7 @@ v_meas_flag = true;
 a_meas_flag = true;
 
 % Plotting IMU Truth & Meas________________________________________________
-accel_flag       = true;
+accel_flag       = false;
 gyro_flag        = false;
 delta_accel_flag = false;
 delta_gyro_flag  = false;
@@ -33,11 +33,12 @@ delta_v_t__t_b_est_flag   = false;
 delta_psi_t__t_b_est_flag = false;
 
 % Plotting Kalman Filtering Tuning Check___________________________________
-r_KF_flag      = true;
-v_KF_flag      = true;
-psi_KF_flag    = true;
-residuals_flag = true;
-meas_flag      = false;
+r_KF_flag         = true;
+v_KF_flag         = true;
+psi_KF_flag       = true;
+residuals_flag    = true;
+meas_flag         = true;
+kalman_gains_flag = true;
 
 % Plotting Truth vs Estimates______________________________________________
 r_truth_vs_est_flag   = false;
@@ -79,7 +80,7 @@ plot_state_est_error(delta_r_t__t_b_est_flag, delta_v_t__t_b_est_flag, ...
                   
 %% Plot Kalman Filter Tuning Check-----------------------------------------
 
-plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, meas_flag, out, P)
+plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, meas_flag, kalman_gains_flag, out, P)
                  
 %% Plot Truth vs Estimates-------------------------------------------------
 
