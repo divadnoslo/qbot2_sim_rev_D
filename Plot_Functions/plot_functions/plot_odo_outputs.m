@@ -1,8 +1,25 @@
-function plot_odo_outputs(plot_ang_vel_odo, plot_body_speed_odo, plot_C_t__b_comp, plot_tan_speed_odo, out, P)
+function plot_odo_outputs(plot_wheel_vel, plot_ang_vel_odo, plot_body_speed_odo, plot_C_t__b_comp, plot_tan_speed_odo, out, P)
 
 % Plot Putputs from Odometry as well as the Comp Filter Output
 
 t = out.tout;
+
+%% Plot Odometry Wheel Velocities
+
+if (plot_wheel_vel == true)
+    
+    figure
+    hold on
+    plot(t, out.v_l, 'g', t, out.v_r, 'r')
+    title('Odometry Wheel Velocities')
+    xlabel('Time (s)')
+    xlim([0, P.t_end])
+    ylabel('m/s')
+    legend('v_l', 'v_r', 'Location', 'Best')
+    grid on
+    hold off
+    
+end
 
 %% Plot Odometry Angular Velocity Measurements
 

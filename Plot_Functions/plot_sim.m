@@ -37,7 +37,7 @@ r_KF_flag         = true;
 v_KF_flag         = true;
 psi_KF_flag       = true;
 residuals_flag    = false;
-z_k_X_flag        = true;
+z_k_X_flag        = false;
 kalman_gains_flag = false;
 
 % Plotting Truth vs Estimates______________________________________________
@@ -51,6 +51,7 @@ psd_plot_flag     = false;
 plot_omega_z_only = false;
 
 % Plot Odometry Outputs____________________________________________________
+plot_wheel_vel      = false;
 plot_ang_vel_odo    = false;
 plot_body_speed_odo = false;
 plot_C_t__b_comp    = false;
@@ -93,4 +94,4 @@ plot_comp_filter(comp_filt_flag, psd_plot_flag, plot_omega_z_only, out, P)
 
 %% Plot Odometry Aiding Sensor Outputs
 
-plot_odo_outputs(plot_ang_vel_odo, plot_body_speed_odo, plot_C_t__b_comp, plot_tan_speed_odo, out, P)
+plot_odo_outputs(plot_wheel_vel, plot_ang_vel_odo, plot_body_speed_odo, plot_C_t__b_comp, plot_tan_speed_odo, out, P)
