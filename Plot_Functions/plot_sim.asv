@@ -14,7 +14,7 @@ w_truth_flag = false;
 % Plotting PVA Measurements________________________________________________
 p_meas_flag = false;
 v_meas_flag = false;
-a_meas_flag = false;
+a_meas_flag = ;
 
 % Plotting IMU Truth & Meas________________________________________________
 accel_flag       = false;

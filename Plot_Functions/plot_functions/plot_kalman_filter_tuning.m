@@ -1,4 +1,4 @@
-function plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, meas_flag, kalman_gains_flag, out, P)
+function plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, z_k_X_flag, kalman_gains_flag, out, P)
 % Plots truth minus estimate for error, w/ Covariance Matrix
 
 % Extract Time
@@ -171,35 +171,78 @@ if (residuals_flag == true)
     
 end
 
-if (meas_flag == true)
+if (z_k_X_flag == true)
     
-    figure
-    subplot(3,1,1)
-    hold on
-    plot(t, out.z_k(:,1), 'r')
-    title('KF Measurements:  z_1 = v^t_t_b_,_o_d_o_,_x - v^t_t_b_,_i_m_u_,_x')
-    xlabel('Time (s)')
-    xlim([0 t(end)])
-    ylabel('m/s')
-    grid on
+    if (sum(sum(out.z_k_1)) ~= 0)
+        
+        figure
+        subplot(3,1,1)
+        hold on
+        plot(t, out.z_k_1(:,1), 'r')
+        title('KF Measurements:  z_1 = \deltav^t_t_b_,_x (meas)')
+        xlabel('Time (s)')
+        xlim([0 t(end)])
+        ylabel('m/s')
+        grid on
+        
+        subplot(3,1,2)
+        hold on
+        plot(t, out.z_k_1(:,2), 'g')
+        title('KF Measurements:  z_2 = \deltav^t_t_b_,_y (meas)')
+        xlabel('Time (s)')
+        xlim([0 t(end)])
+        ylabel('m/s')
+        grid on
+        
+        subplot(3,1,3)
+        hold on
+        plot(t, out.z_k_1(:,3), 'b')
+        title('KF Measurements:  z_3 = \deltav^t_t_b_,_z (meas)')
+        xlabel('Time (s)')
+        xlim([0 t(end)])
+        ylabel('m/s')
+        grid on
+        
+    end
+        
+    if (sum(sum(out.z_k_2)) ~= 0)
+        
+        z_k_2 = zeros(3, length(t));
+        for k = 1 : length(t)
+            [yaw, pitch, roll] = dcm2ypr(k2dcm(out.z_k_2(k,:)'));
+            z_k_2(:,k) = [roll; pitch; yaw];
+        end
+        
+        figure
+        subplot(3,1,1)
+        hold on
+        plot(t, out.z_k_2(:,1) * 180/pi, 'r')
+        title('KF Measurements:  z_1 = \delta\phi^t_t_b (meas)')
+        xlabel('Time (s)')
+        xlim([0 t(end)])
+        ylabel('(\circ)')
+        grid on
+        
+        subplot(3,1,2)
+        hold on
+        plot(t, out.z_k_2(:,2) * 180/pi, 'g')
+        title('KF Measurements:  z_2 = \delta\theta^t_t_b (meas)')
+        xlabel('Time (s)')
+        xlim([0 t(end)])
+        ylabel('(\circ)')
+        grid on
+        
+        subplot(3,1,3)
+        hold on
+        plot(t, out.z_k_2(:,3) * 180/pi, 'b')
+        title('KF Measurements:  z_3 = \delta\psi^t_t_b (meas)')
+        xlabel('Time (s)')
+        xlim([0 t(end)])
+        ylabel('(\circ)')
+        grid on
+        
+    end
     
-    subplot(3,1,2)
-    hold on
-    plot(t, out.z_k(:,2), 'g')
-    title('KF Measurements:  z_2 = v^t_t_b_,_o_d_o_,_y - v^t_t_b_,_i_m_u_,_y')
-    xlabel('Time (s)')
-    xlim([0 t(end)])
-    ylabel('m/s')
-    grid on
-    
-    subplot(3,1,3)
-    hold on
-    plot(t, out.z_k(:,3), 'b')
-    title('KF Measurements:  z_3 = v^t_t_b_,_o_d_o_,_z - v^t_t_b_,_i_m_u_,_z')
-    xlabel('Time (s)')
-    xlim([0 t(end)])
-    ylabel('m/s')
-    grid on
     
 end
     

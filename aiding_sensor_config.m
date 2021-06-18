@@ -19,7 +19,7 @@
 %% Select Aiding Sensor Configuration
 
 % Enter the Number of the desired Aiding Sensor Configuration above
-P.aiding_sensor_config = 1;
+P.aiding_sensor_config = 3;
 
 % Turn On/Off the Complimentary Filter
 P.use_comp_filter = false;
@@ -37,10 +37,10 @@ P.use_v_t__t_b_meas = false;
 % -- nothing to define
 
 % Fake Velocity Aiding
-P.sigma_fake_v = [0.1; 0.1; 0.05];
+P.sigma_fake_v = [0.1; 0.1; 0.01];
 
 % Fake Attitude Aiding
-P.sigma_fake_euler = [1; 1; 3] * 180/pi;
+P.sigma_fake_psi = [0.01; 0.01; 0.5] * pi/180;
 
 % Odometry 
 P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt)^2; ...  % Variance of Speed in {b} frame
