@@ -37,7 +37,7 @@ r_KF_flag         = true;
 v_KF_flag         = true;
 psi_KF_flag       = true;
 residuals_flag    = false;
-z_k_X_flag        = false;
+z_k_X_flag        = true;
 kalman_gains_flag = false;
 
 % Plotting Truth vs Estimates______________________________________________

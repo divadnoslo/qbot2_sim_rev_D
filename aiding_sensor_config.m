@@ -6,8 +6,8 @@
 
 % The following options are:
 %
-%  - (0) No Measurement Update,     
-%  - (1) Fake Velocity,             
+%  - (0) No Measurement Update
+%  - (1) Fake Velocity Only          
 %  - (2) Fake Attitude Only         
 %  - (3) Full Fake Aiding          
 %  - (4) Odometry                   
@@ -19,7 +19,7 @@
 %% Select Aiding Sensor Configuration
 
 % Enter the Number of the desired Aiding Sensor Configuration above
-P.aiding_sensor_config = 1;
+P.aiding_sensor_config = 3;
 
 % Turn On/Off the Complimentary Filter
 P.use_comp_filter = false;
