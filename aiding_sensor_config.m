@@ -22,7 +22,7 @@
 P.aiding_sensor_config = 3;
 
 % Turn On/Off the Complimentary Filter
-P.use_comp_filter = false;
+P.use_comp_filter = true;
 
 % Use Measurements for Kalman Filter Inputs (f_b__i_b, C_t__b, v_t__t_b)
 P.use_f_b__i_b_meas = false;
@@ -37,10 +37,10 @@ P.use_v_t__t_b_meas = false;
 % -- nothing to define
 
 % Fake Velocity Aiding
-P.sigma_fake_v = [0.1; 0.1; 0.01];
+P.sigma_fake_v = [0.25; 0.25; 0.025];
 
 % Fake Attitude Aiding
-P.sigma_fake_psi = [0.01; 0.01; 0.5] * pi/180;
+P.sigma_fake_psi = [0.01; 0.01; 0.1] * pi/180;
 
 % Odometry 
 P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt); ...  % Variance of Speed in {b} frame

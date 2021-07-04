@@ -102,6 +102,21 @@ if (a_flag == true)
     grid on
     legend('estimate', 'truth', 'Location', 'Best')
     
+    figure
+    plot(t, yaw * 180/pi, 'b', t, out.A_truth(:,3) * 180/pi, 'k')
+    title('Truth vs. Estimate:   \psi^t_t_b')
+    xlabel('Time (s)')
+    xlim([0 t(end)])
+    ylabel('\circ')
+    grid on
+    legend('estimate', 'truth', 'Location', 'Best')
+    
+    % Save Final State
+    r_end = out.P_truth(:,end) - out.r_t__t_b_est(:,end);
+    v_end = out.V_truth(:,end) - out.v_t__t_b_est(:,end);
+    psi_end = [roll(end), pitch(end), out.A_truth(end,3) - yaw(end)];
+    save('final_state.mat', 'r_end', 'v_end', 'psi_end')
+    
 end
 
 end

@@ -92,8 +92,8 @@ for kk = 1 : num_runs
     plot(t, delta_r(kk,:), color_str(mod(kk, length(color_str)) + 1))
 end
 line([t(1) t(end)], [avg_error avg_error], 'Color', 'red', 'LineStyle', '--')
-text(0.5, avg_error + 0.1 * avg_error, 'Average Ending Position Error')
-text(0.5, avg_error - 0.1 * avg_error, [num2str(avg_error), ' m'])
+text(15, avg_error + 0.1 * avg_error, 'Average Ending Position Error')
+text(15, avg_error - 0.1 * avg_error, ['~', num2str(round(avg_error)), ' m'])
 title('Monte Carlo:  \delta|r^t_t_b|  -- Position Error via Gyro Errors Only')
 xlabel('Time (s)')
 ylabel('\delta|r^t_t_b| (m)')

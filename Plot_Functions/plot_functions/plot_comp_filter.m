@@ -67,7 +67,7 @@ if (psd_plot_flag == true)
     str = ['\sigma_\omega = ', num2str(std(w_imu_z * 180/pi)), '\circ/s'];
     title(['\omega_z IMU PSD  ', str])
     xlabel('Frequency (Hz)')
-    ylabel('deg/s / sqrt(Hz)')
+    ylabel('\circ/s / sqrt(Hz)')
     %xlim([0.5, 50])
     grid on
     hold off
@@ -79,7 +79,7 @@ if (psd_plot_flag == true)
     str = ['\sigma_\omega = ', num2str(std(w_odo_z * 180/pi)), '\circ/s'];
     title(['\omega_z Odo PSD  ', str])
     xlabel('Frequency (Hz)')
-    ylabel('deg/s / sqrt(Hz)')
+    ylabel('\circ/s / sqrt(Hz)')
     %xlim([0.5, 50])
     grid on
     hold off
@@ -91,7 +91,7 @@ if (psd_plot_flag == true)
     str = ['\sigma_\omega = ', num2str(std(w_error * 180/pi)), '\circ/s'];
     title(['\delta\omega_z (Odo - IMU) PSD  ', str])
     xlabel('Frequency (Hz)')
-    ylabel('deg/s / sqrt(Hz)')
+    ylabel('\circ/s / sqrt(Hz)')
     %xlim([0.5, 50])
     grid on
     hold off
@@ -104,7 +104,7 @@ if (psd_plot_flag == true)
     str = ['\sigma_\omega = ', num2str(std(w_comp_z * 180/pi)), '\circ/s'];
     title(['\omega_z Comp PSD  ', str])
     xlabel('Frequency (Hz)')
-    ylabel('deg/s / sqrt(Hz)')
+    ylabel('\circ/s / sqrt(Hz)')
     %xlim([0.5, 50])
     grid on
     hold off
@@ -120,9 +120,10 @@ if (plot_omega_z_only == true)
     plot(t, w_odo(:,3) * 180/pi, 'g')
     plot(t, w_comp(:,3) * 180/pi, 'r')
     plot(t, w_true(:,3) * 180/pi, 'k-')
-    str = ['truth_a_v_g = ', num2str(mean(w_true(:,3) * 180/pi)), ...
-           '\circ/s  comp_a_v_g = ', num2str(mean(w_comp(:,3) * 180/pi)), '\circ/s'];
-    title(['\omega^t_t_b_,_z   ', str])
+%     str = ['truth_a_v_g = ', num2str(mean(w_true(:,3) * 180/pi)), ...
+%            '\circ/s  comp_a_v_g = ', num2str(mean(w_comp(:,3) * 180/pi)), '\circ/s'];
+%     title(['\omega^t_t_b_,_z   ', str])
+    title('Angular Velocity Noise Comparison')
     ylabel('\circ/s')
     legend('IMU', 'Odo', 'Comp', 'Truth', 'Location', 'Best')
     grid on
