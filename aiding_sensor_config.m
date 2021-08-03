@@ -19,7 +19,7 @@
 %% Select Aiding Sensor Configuration
 
 % Enter the Number of the desired Aiding Sensor Configuration above
-P.aiding_sensor_config = 3;
+P.aiding_sensor_config = 4;
 
 % Turn On/Off the Complimentary Filter
 P.use_comp_filter = true;
@@ -40,13 +40,13 @@ P.use_v_t__t_b_meas = false;
 P.sigma_fake_v = [0.25; 0.25; 0.025];
 
 % Fake Attitude Aiding
-P.sigma_fake_psi = [0.01; 0.01; 0.1] * pi/180;
+P.sigma_fake_psi = [0.1; 0.1; 0.989949493661167] * pi/180;
 
 % Odometry 
 P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt); ...  % Variance of Speed in {b} frame
-                         0.005; ...                  % Assumed Variance of body frame {y} vel, Nonholomonic Constraints
-                         0.005];                     % Assumed Variance of body frame {z} vel, Nonholomonic Constraints
+                         0.02; ...                  % Assumed Variance of body frame {y} vel, Nonholomonic Constraints
+                         0.02];                     % Assumed Variance of body frame {z} vel, Nonholomonic Constraints
                      
 % Kinect
-P.sigma_kinect_euler = [0.45; 0.18; 0.04] * 180/pi; 
-% Current Values from Previous Research Paper
+P.sigma_kinect_euler = [0.45; 0.18; 0.04] * pi/180; % Current Values from Previous Research Paper
+P.sigma_SNHT = 5 * pi/180 * [0.1; 0.1; 0.989949493661167];

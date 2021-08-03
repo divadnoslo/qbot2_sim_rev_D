@@ -58,8 +58,8 @@ plot_C_t__b_comp    = false;
 plot_tan_speed_odo  = false;
 
 % Plot Kalman Filter Measurement PSD_______________________________________
-zk1_psd_flag = false;
-zk2_psd_flag = false;
+zk1_psd_flag = true;
+zk2_psd_flag = true;
 
 %**************************************************************************
 %% Plot Ground Truth
@@ -102,4 +102,4 @@ plot_odo_outputs(plot_wheel_vel, plot_ang_vel_odo, plot_body_speed_odo, plot_C_t
 
 %% Plot Kalman Filter Meas (z_k_x) PSD's
 
-plot_KF_meas_PSD(zk1_psd_flag, zk2_psd_flag, out, P)
+plot_KF_meas_PSD(

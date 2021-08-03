@@ -4,98 +4,184 @@
 
 %% Load the Simulation M-File
 
-file_name = 'rest_10min_gyro_cal';
+file_name = 'calibrated_IMU_king_hallway_run';
 file_path = [file_name, '_monte_carlo.mat'];
 
 load(file_path)
 
-%% Subplots of X, Y, and Z position error
-
 color_str = ['r', 'g', 'c', 'b', 'm'];
 
-fig_num = 1;
+%% Plots of Position Monte Carlo Runs
 
-figure(fig_num)
+figure(1)
+
+% X Position Graph
+subplot(3, 1, 1)
 hold on
-for ii = 1 : num_runs
-    plot(t, delta_x(ii,:), color_str(mod(ii, length(color_str)) + 1))
+for k = 1 : num_runs
+    plot(t, r_x(k,:), color_str(mod(k, length(color_str)) + 1))
 end
-title('Monte Carlo:  Error in X-Position')
+r_x_avg_error = mean(abs(r_x(:,end)));
+r_x_std_dev = std(r_x(:,end));
+title('Monte Carlo: r^t_t_b_,_x')
 xlabel('Time (s)')
-ylabel('\deltar_x (m)')
+xlim([0 t(end)])
+ylabel('m')
+str = ['|r^t_t_b_,_x| error avg = ', num2str(r_x_avg_error), ' m   std dev = '...
+       num2str(r_x_std_dev), ' m'];
+text(5, 2*min(r_x(:,end))/3, str, 'FontSize', 6)
 grid on
 hold off
 
-fig_num = 2;
-
-figure(fig_num)
+% Y Position Graph
+subplot(3, 1, 2)
 hold on
-for ii = 1 : num_runs
-    plot(t, delta_y(ii,:), color_str(mod(ii, length(color_str)) + 1))
+for k = 1 : num_runs
+    plot(t, r_y(k,:), color_str(mod(k, length(color_str)) + 1))
 end
-title('Monte Carlo:  Error in Y-Position')
+r_y_avg_error = mean(abs(r_y(:,end)));
+r_y_std_dev = std(r_y(:,end));
+title('Monte Carlo: r^t_t_b_,_y')
 xlabel('Time (s)')
-ylabel('\deltar_y (m)')
+xlim([0 t(end)])
+ylabel('m')
+str = ['|r^t_t_b_,_y| error avg = ', num2str(r_y_avg_error), ' m   std dev = '...
+       num2str(r_y_std_dev), ' m'];
+text(5, 2*min(r_y(:,end))/3, str, 'FontSize', 6)
 grid on
 hold off
 
-fig_num = 3;
-
-figure(fig_num)
+% Z Position Graph
+subplot(3, 1, 3)
 hold on
-for ii = 1 : num_runs
-    plot(t, delta_z(ii,:), color_str(mod(ii, length(color_str)) + 1))
+for k = 1 : num_runs
+    plot(t, r_z(k,:), color_str(mod(k, length(color_str)) + 1))
 end
-title('Monte Carlo:  Error in Z-Position')
+r_z_avg_error = mean(abs(r_z(:,end)));
+r_z_std_dev = std(r_z(:,end));
+title('Monte Carlo: r^t_t_b_,_z')
 xlabel('Time (s)')
-ylabel('\deltar_z (m)')
+xlim([0 t(end)])
+ylabel('m')
+str = ['|r^t_t_b_,_z| error avg = ', num2str(r_z_avg_error), ' m   std dev = '...
+       num2str(r_z_std_dev), ' m'];
+text(5, 2*min(r_z(:,end))/3, str, 'FontSize', 6)
 grid on
 hold off
 
-%% Plotting the StdDev at each timestep
-    
-figure
-subplot(3,1,1)
-hold on
-plot(t, (1/2)*abs(P.accel.b_a_FB(1))*t.^2, 'k:')
-plot(t, sigma_x, 'r')
-title('Std-Dev in X-Position Error')
-xlabel('Time (s)')
-ylabel('\sigma_x (m)')
-grid on
-hold off
-subplot(3,1,2)
-hold on
-plot(t, (1/2)*abs(P.accel.b_a_FB(2))*t.^2, 'k:')
-plot(t, sigma_y, 'g')
-title('Std-Dev in Y-Position Error')
-xlabel('Time (s)')
-ylabel('\sigma_y (m)')
-grid on
-hold off
-subplot(3,1,3)
-hold on
-plot(t, (1/2)*abs(P.accel.b_a_FB(3))*t.^2, 'k:')
-plot(t, sigma_z, 'b')
-title('Std-Dev in Z-Position Error')
-xlabel('Time (s)')
-ylabel('\sigma_z (m)')
-grid on
-legend('Expected Error Growth', 'Error Std Dev of 100 Sims', 'Location', 'Best')
-hold off
+%% Plots of Velocity Monte Carlo Runs
 
-%% Monte Carlo Sim Plot
+figure(2)
 
-figure
+% X Velocity Graph
+subplot(3, 1, 1)
 hold on
-for kk = 1 : num_runs
-    plot(t, delta_r(kk,:), color_str(mod(kk, length(color_str)) + 1))
+for k = 1 : num_runs
+    plot(t, v_x(k,:), color_str(mod(k, length(color_str)) + 1))
 end
-line([t(1) t(end)], [avg_error avg_error], 'Color', 'red', 'LineStyle', '--')
-text(15, avg_error + 0.1 * avg_error, 'Average Ending Position Error')
-text(15, avg_error - 0.1 * avg_error, ['~', num2str(round(avg_error)), ' m'])
-title('Monte Carlo:  \delta|r^t_t_b|  -- Position Error via Gyro Errors Only')
+v_x_avg_error = mean(abs(v_x(:,end)));
+v_x_std_dev = std(v_x(:,end));
+title('Monte Carlo: v^t_t_b_,_x')
 xlabel('Time (s)')
-ylabel('\delta|r^t_t_b| (m)')
+xlim([0 t(end)])
+ylabel('m/s')
+str = ['|v^t_t_b_,_x| error avg = ', num2str(v_x_avg_error), ' m/s   std dev = '...
+       num2str(v_x_std_dev), ' m/s'];
+text(5, 2*min(v_x(:,end))/3, str, 'FontSize', 6)
 grid on
 hold off
+
+% Y Velocity Graph
+subplot(3, 1, 2)
+hold on
+for k = 1 : num_runs
+    plot(t, v_y(k,:), color_str(mod(k, length(color_str)) + 1))
+end
+v_y_avg_error = mean(abs(v_y(:,end)));
+v_y_std_dev = std(v_y(:,end));
+title('Monte Carlo: v^t_t_b_,_y')
+xlabel('Time (s)')
+xlim([0 t(end)])
+ylabel('m/s')
+str = ['|v^t_t_b_,_y| error avg = ', num2str(v_y_avg_error), ' m/s   std dev = '...
+       num2str(v_y_std_dev), ' m/s'];
+text(5, 2*min(v_y(:,end))/3, str, 'FontSize', 6)
+grid on
+hold off
+
+% Z Velocity Graph
+subplot(3, 1, 3)
+hold on
+for k = 1 : num_runs
+    plot(t, v_z(k,:), color_str(mod(k, length(color_str)) + 1))
+end
+v_z_avg_error = mean(abs(v_z(:,end)));
+v_z_std_dev = std(v_z(:,end));
+title('Monte Carlo: v^t_t_b_,_z')
+xlabel('Time (s)')
+xlim([0 t(end)])
+ylabel('m/s')
+str = ['|v^t_t_b_,_z| error avg = ', num2str(v_z_avg_error), ' m/s   std dev = '...
+       num2str(v_z_std_dev), ' m/s'];
+text(5, 2*min(v_z(:,end))/3, str, 'FontSize', 6)
+grid on
+hold off
+
+%% Plots of Attitude Monte Carlo Runs
+
+figure(3)
+
+% X Velocity Graph
+subplot(3, 1, 1)
+hold on
+for k = 1 : num_runs
+    plot(t, phi(k,:) * 180/pi, color_str(mod(k, length(color_str)) + 1))
+end
+phi_avg_error = mean(abs(phi(:,end)));
+phi_std_dev = std(phi(:,end));
+title('Monte Carlo: \phi^t_t_b')
+xlabel('Time (s)')
+xlim([0 t(end)])
+ylabel('\circ')
+str = ['|\phi^t_t_b| error avg = ', num2str(phi_avg_error * 180/pi), '\circ   std dev = '...
+       num2str(phi_std_dev * 180/pi), '\circ'];
+text(5, 2*min(phi(:,end))/3 * 180/pi, str, 'FontSize', 6)
+grid on
+hold off
+
+% Y Velocity Graph
+subplot(3, 1, 2)
+hold on
+for k = 1 : num_runs
+    plot(t, theta(k,:) * 180/pi, color_str(mod(k, length(color_str)) + 1))
+end
+theta_avg_error = mean(abs(theta(:,end)));
+theta_std_dev = std(theta(:,end));
+title('Monte Carlo: \theta^t_t_b')
+xlabel('Time (s)')
+xlim([0 t(end)])
+ylabel('\circ')
+str = ['|\theta^t_t_b| error avg = ', num2str(theta_avg_error * 180/pi), '\circ   std dev = '...
+       num2str(theta_std_dev * 180/pi), '\circ'];
+text(5, 2*max(theta(:,end))/3 * 180/pi + 0.1, str, 'FontSize', 6)
+grid on
+hold off
+
+% Z Velocity Graph
+subplot(3, 1, 3)
+hold on
+for k = 1 : num_runs
+    plot(t, unwrap(psi(k,:)) * 180/pi, color_str(mod(k, length(color_str)) + 1))
+end
+psi_avg_error = mean(abs(psi(:,end)));
+psi_std_dev = std(psi(:,end));
+title('Monte Carlo: \psi^t_t_b')
+xlabel('Time (s)')
+xlim([0 t(end)])
+ylabel('\circ')
+str = ['|\psi^t_t_b| error avg = ', num2str(psi_avg_error * 180/pi), '\circ   std dev = '...
+       num2str(psi_std_dev * 180/pi), '\circ'];
+text(5, -270 , str, 'FontSize', 6)
+grid on
+hold off
+

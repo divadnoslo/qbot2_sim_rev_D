@@ -4,10 +4,14 @@
 
 %% Name the Simulation M-File
 
-file_name = 'rest_10min_gyro_cal';
+file_name = 'cIMU_odometry_king_hallway_run';
 file_path = [file_name, '_monte_carlo.mat'];
 
 %% Set IMU Error Characteristics
+
+% Add Folders to Path
+addpath('IMU_Cal_Data', 'Nav_Functions', ...
+        'Plot_Functions', 'Plot_Functions/plot_functions')
 
 % Open Simulink Model
 open('qbot2_sim_2020a')
@@ -21,8 +25,8 @@ P.accel.b_a_FB_flag = false;
 P.accel.M_a_flag = false;
 
 % Accel Varying Errors
-P.accel.white_noise_accel_flag = false;
-P.accel.colored_noise_accel_flag = false;
+P.accel.white_noise_accel_flag = true;
+P.accel.colored_noise_accel_flag = true;
 
 
 % Gyro Constant Errors
@@ -45,73 +49,73 @@ P.plotsim_flag = false;
 % Generat Motion Plan
 qbot2_motion_plan;
 
+% Aiding Sensor Config
+aiding_sensor_config;
+
 %% Define Monte Carlo Parameters
 
 num_runs = 100;
 
-delta_x = zeros(num_runs, length(0:P.dt:P.t_end));
-delta_y = zeros(num_runs, length(0:P.dt:P.t_end));
-delta_z = zeros(num_runs, length(0:P.dt:P.t_end));
-delta_r = zeros(num_runs, length(0:P.dt:P.t_end));
+r_x = zeros(num_runs, length(0:P.dt:P.t_end));
+r_y = zeros(num_runs, length(0:P.dt:P.t_end));
+r_z = zeros(num_runs, length(0:P.dt:P.t_end));
+v_x = zeros(num_runs, length(0:P.dt:P.t_end));
+v_y = zeros(num_runs, length(0:P.dt:P.t_end));
+v_z = zeros(num_runs, length(0:P.dt:P.t_end));
+phi = zeros(num_runs, length(0:P.dt:P.t_end));
+theta = zeros(num_runs, length(0:P.dt:P.t_end));
+psi = zeros(num_runs, length(0:P.dt:P.t_end));
 
 %% ReRun if required -- Begin Simulation
 
-tic
-
 % Begin Loop
 for kk = 1 : num_runs
+    
+    % Start Timer
+    tic
     
     % Run Simulation -- plot_sim() in StopFcn commented out!
     rng(kk)
     out = sim('qbot2_sim_2020a');
     
-    % Isolate the Position Error
+    % Isolate XYZ errors
     if (kk == 1)
         t = out.tout;
     end
-    delta_xyz = out.delta_r_t__t_b.Data';
     
-    % Isolate XYZ errors
-    delta_x(kk,:) = delta_xyz(1,:);
-    delta_y(kk,:) = delta_xyz(2,:);
-    delta_z(kk,:) = delta_xyz(3,:);
+    % Save Position
+    r_x(kk,:) = out.r_t__t_b_est(:,1)';
+    r_y(kk,:) = out.r_t__t_b_est(:,2)';
+    r_z(kk,:) = out.r_t__t_b_est(:,3)';
     
-    % Find the magntiude of the position error
-    for jj = 1 : length(delta_xyz)
-        delta_r(kk,jj) = sqrt(delta_xyz(1,jj)^2 + delta_xyz(2,jj)^2 + delta_xyz(3,jj)^2);
+    % Save Position
+    v_x(kk,:) = out.v_t__t_b_est(:,1)';
+    v_y(kk,:) = out.v_t__t_b_est(:,2)';
+    v_z(kk,:) = out.v_t__t_b_est(:,3)';
+    
+    % Save Attitude (Euler Angles)
+    for ii = 1 : length(t)
+        [yaw, pitch, roll] = dcm2ypr(out.C_t__b_est(:,:,ii));
+        phi(kk,ii) = roll;
+        theta(kk,ii) = pitch;
+        psi(kk,ii) = yaw;
     end
     
     % Clear Simulation Output
     clear out
     
+    % End Timer
+    fprintf('Run #%d of %d \n', kk, num_runs)
+    toc
+    
 end
 
 % Program Stats
-toc
 beep
-
-% Collect some stats
-end_error = delta_r(:,end);
-avg_error = mean(end_error);
-
-sigma_x = zeros(1, length(0:P.dt:P.t_end));
-sigma_y = zeros(1, length(0:P.dt:P.t_end));
-sigma_z = zeros(1, length(0:P.dt:P.t_end));
-for ii = 1 : length(t)
-    
-    % Std-Dev in X at each time step
-    sigma_x(ii) = std(delta_x(:,ii));
-    
-    % Std-Dev in Y at each time step
-    sigma_y(ii) = std(delta_y(:,ii));
-    
-    % Std-Dev in Z at each time step
-    sigma_z(ii) = std(delta_z(:,ii));
-    
-end
 
 %% Save Data
 
-save(file_path, 't', 'delta_x', 'delta_y', 'delta_z', ...
-              'delta_r', 'end_error', 'avg_error', 'num_runs', ...
-              'sigma_x', 'sigma_y', 'sigma_z')
+save(file_path, 'num_runs', 't', ...
+                'r_x', 'r_y', 'r_z', ...
+                'v_x', 'v_y', 'v_z', ...
+                'phi', 'theta', 'psi')
