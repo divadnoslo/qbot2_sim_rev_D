@@ -33,9 +33,9 @@ delta_v_t__t_b_est_flag   = false;
 delta_psi_t__t_b_est_flag = false;
 
 % Plotting Kalman Filtering Tuning Check___________________________________
-r_KF_flag         = false;
-v_KF_flag         = false;
-psi_KF_flag       = false;
+r_KF_flag         = true;
+v_KF_flag         = true;
+psi_KF_flag       = true;
 residuals_flag    = false;
 z_k_X_flag        = false;
 kalman_gains_flag = false;

@@ -30,6 +30,7 @@ end
 
 load("IMU_Cal_Data/IMU_Cal_Const_Error_Sources.mat")
 load("IMU_Cal_Data/IMU_Cal_Varying_Error_Sources.mat")
+load("IMU_Cal_Data/BS_Cal_Results.mat")
 
 %% Set Desired IMU Errors
 
@@ -37,7 +38,7 @@ load("IMU_Cal_Data/IMU_Cal_Varying_Error_Sources.mat")
 % Set Accel Constant Errors
 if (P.accel.b_a_FB_flag == true)
     P.accel.b_a_FB = b_a_FB;
-    P.accel.b_a_BS = (2*rand - 1) .* b_a_FB;
+    P.accel.b_a_BS = (2*rand - 1) .* accel_BS;
 else
     P.accel.b_a_FB = zeros(3,1);
     P.accel.b_a_BS = zeros(3,1); 
@@ -68,7 +69,7 @@ end
 % Set Gyro Constant Errors
 if (P.gyro.b_g_FB_flag == true)
     P.gyro.b_g_FB = b_g_FB;
-    P.gyro.b_g_BS = (2*rand - 1) .* b_g_FB; 
+    P.gyro.b_g_BS = (2*rand - 1) .* gyro_BS; 
 else
     P.gyro.b_g_FB = zeros(3,1);
     P.gyro.b_g_BS = zeros(3,1); 
@@ -104,4 +105,4 @@ end
 %% Clear Uneccessary Variables from the workspace
 
 clear accel_std b_a_FB b_g_FB gyro_std M_a M_g sigma_n_accel sigma_n_gyro
-clear accel_VRW gyro_ARW sigma_VRW sigma_ARW
+clear accel_VRW gyro_ARW sigma_VRW sigma_ARW accel_BS gyro_BS

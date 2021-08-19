@@ -22,12 +22,12 @@
 P.aiding_sensor_config = 4;
 
 % Turn On/Off the Complimentary Filter
-P.use_comp_filter = true;
+P.use_comp_filter = false;
 
 % Use Measurements for Kalman Filter Inputs (f_b__i_b, C_t__b, v_t__t_b)
-P.use_f_b__i_b_meas = false;
-P.use_C_t__b_meas = false;
-P.use_v_t__t_b_meas = false;
+P.use_f_b__i_b_meas = true;
+P.use_C_t__b_meas =   true;
+P.use_v_t__t_b_meas = true;
 
 
 %__________________________________________________________________________
@@ -44,8 +44,8 @@ P.sigma_fake_psi = [0.1; 0.1; 0.989949493661167] * pi/180;
 
 % Odometry 
 P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt); ...  % Variance of Speed in {b} frame
-                         0.02; ...                  % Assumed Variance of body frame {y} vel, Nonholomonic Constraints
-                         0.02];                     % Assumed Variance of body frame {z} vel, Nonholomonic Constraints
+                         0.03; ...                  % Assumed Variance of body frame {y} vel, Nonholomonic Constraints
+                         0.03];                     % Assumed Variance of body frame {z} vel, Nonholomonic Constraints
                      
 % Kinect
 P.sigma_kinect_euler = [0.45; 0.18; 0.04] * pi/180; % Current Values from Previous Research Paper

@@ -17,10 +17,8 @@
 % % Staying Still for an amount of time
 % P.motion_plan = {"Mode 1", 120};
 
-% Moving Forward for 30 meters
-% P.motion_plan = {"Mode 1", 5; ...
-%                  "Mode 3", 100; ...
-%                  "Mode 1", 5};
+% % Moving Forward for 100 meters
+% P.motion_plan = {"Mode 3", 100};
 
 % % Rotate in Place 16 Times
 % P.motion_plan = {"Mode 2", 16*(2*pi)};
