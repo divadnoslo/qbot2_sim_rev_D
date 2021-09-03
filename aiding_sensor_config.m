@@ -19,10 +19,10 @@
 %% Select Aiding Sensor Configuration
 
 % Enter the Number of the desired Aiding Sensor Configuration above
-P.aiding_sensor_config = 4;
+P.aiding_sensor_config = 6;
 
 % Turn On/Off the Complimentary Filter
-P.use_comp_filter = false;
+P.use_comp_filter = true;
 
 % Use Measurements for Kalman Filter Inputs (f_b__i_b, C_t__b, v_t__t_b)
 P.use_f_b__i_b_meas = true;
@@ -49,4 +49,4 @@ P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt); ...  % Variance of Speed in {b} 
                      
 % Kinect
 P.sigma_kinect_euler = [0.45; 0.18; 0.04] * pi/180; % Current Values from Previous Research Paper
-P.sigma_SNHT = 5 * pi/180 * [0.1; 0.1; 0.989949493661167];
+P.sigma_SNHT = [5; 5; 5] * pi/180;
