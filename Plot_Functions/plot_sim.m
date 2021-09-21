@@ -61,6 +61,9 @@ plot_tan_speed_odo  = false;
 zk1_psd_flag = false;
 zk2_psd_flag = false;
 
+% Plot Barometer Data
+plot_baro_flag = false;
+
 %**************************************************************************
 %% Plot Ground Truth
 
@@ -103,3 +106,7 @@ plot_odo_outputs(plot_wheel_vel, plot_ang_vel_odo, plot_body_speed_odo, plot_C_t
 %% Plot Kalman Filter Meas (z_k_x) PSD's
 
 plot_KF_meas_PSD(zk1_psd_flag, zk2_psd_flag, out, P)
+
+%% Plot Barometer Data
+
+plot_baro(plot_baro_flag, out, P)

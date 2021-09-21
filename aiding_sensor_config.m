@@ -24,6 +24,9 @@ P.aiding_sensor_config = 4;
 % Turn On/Off the Complimentary Filter
 P.use_comp_filter = true;
 
+% Turn on/off Barometer
+P.use_barometer = true;
+
 %__________________________________________________________________________
 %% Define All Aiding Sensor Properties
 
@@ -45,3 +48,6 @@ P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt); ...  % Variance of Speed in {b} 
 P.sigma_pitch = 3 * pi/180; % Expected Rocking in the Qbot 2
 P.sigma_yaw = 3 * pi/180;
 P.sigma_SNHT = [0.05; 1; 1.5] * pi/180;
+
+% Barometer
+P.sigma_baro = 0.3;

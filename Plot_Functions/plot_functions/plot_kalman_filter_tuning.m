@@ -1,6 +1,9 @@
 function plot_kalman_filter_tuning(r_KF_flag, v_KF_flag, psi_KF_flag, residuals_flag, z_k_X_flag, kalman_gains_flag, out, P)
 % Plots truth minus estimate for error, w/ Covariance Matrix
 
+% Build randn quantities from etrinsic functions
+coder.extrinsic('unwrap');
+
 % Extract Time
 t = out.tout;
 
@@ -101,14 +104,40 @@ if (psi_KF_flag == true)
     end
     
     % Calculate Truth Minus Error
+    unwrapped_psi = zeros(1, length(t));
+    unwrapped_psi = unwrap(ypr(3,:));
+    ypr(3,:) = unwrapped_psi;
     psi_error = (out.A_truth - ypr')';
+    
+    % Convert Angle-Axis Sigmas to Euler Angle Sigmas
+    P_euler = zeros(3, length(t));
+    for k = 1 : length(t)
+        
+        % Compute Jacobian
+        roll = ypr(1,k);
+        pitch = ypr(2,k);
+        J = [1, 0, -sin(pitch); ...
+             0, cos(roll), sin(roll)*cos(pitch); ...
+             0, -sin(roll), cos(roll)*cos(pitch)];
+        
+        % Invert J
+        inv_J = inv(J); 
+         
+        % Define R_e with known sigmas
+        P_angle_axis = diag([P(1,k), P(2,k), P(3,k)]);
+        
+        % Convert R_e to R_k
+         P_euler_cov = inv_J * P_angle_axis * inv_J';
+         P_euler(:,k) = [P_euler_cov(1,1); P_euler_cov(2,2); P_euler_cov(3,3)];
+        
+    end
     
     % Begin Plots
     figure
     subplot(3,1,1)
     hold on
     plot(t, psi_error(1,:) * 180/pi, 'r')
-    plot(t, P(1,:) * 180/pi, 'k', t, -P(1,:) * 180/pi, 'k')
+    plot(t, P_euler(1,:) * 180/pi, 'k', t, -P_euler(1,:) * 180/pi, 'k')
     title('KF Tuning Check:  True \phi^t_t_b -  Estimated \phi^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -119,7 +148,7 @@ if (psi_KF_flag == true)
     subplot(3,1,2)
     hold on
     plot(t, psi_error(2,:) * 180/pi, 'g')
-    plot(t, P(2,:) * 180/pi, 'k', t, -P(2,:) * 180/pi, 'k')
+    plot(t, P_euler(2,:) * 180/pi, 'k', t, -P_euler(2,:) * 180/pi, 'k')
     title('KF Tuning Check:  True \theta^t_t_b - Estimated \theta^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
@@ -130,7 +159,7 @@ if (psi_KF_flag == true)
     subplot(3,1,3)
     hold on
     plot(t, psi_error(3,:) * 180/pi, 'b')
-    plot(t, P(3,:) * 180/pi, 'k', t, -P(3,:) * 180/pi, 'k')
+    plot(t, P_euler(3,:) * 180/pi, 'k', t, -P_euler(3,:) * 180/pi, 'k')
     title('KF Tuning Check:  True \psi^t_t_b - Estimated \psi^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
