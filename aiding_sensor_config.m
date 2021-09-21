@@ -19,16 +19,10 @@
 %% Select Aiding Sensor Configuration
 
 % Enter the Number of the desired Aiding Sensor Configuration above
-P.aiding_sensor_config = 6;
+P.aiding_sensor_config = 4;
 
 % Turn On/Off the Complimentary Filter
 P.use_comp_filter = true;
-
-% Use Measurements for Kalman Filter Inputs (f_b__i_b, C_t__b, v_t__t_b)
-P.use_f_b__i_b_meas = true;
-P.use_C_t__b_meas =   true;
-P.use_v_t__t_b_meas = true;
-
 
 %__________________________________________________________________________
 %% Define All Aiding Sensor Properties
@@ -48,5 +42,6 @@ P.sigma_v_b__t_b_odo = [(P.sigma_odo_d / P.dt); ...  % Variance of Speed in {b} 
                          0.03];                     % Assumed Variance of body frame {z} vel, Nonholomonic Constraints
                      
 % Kinect
-P.sigma_kinect_euler = [0.45; 0.18; 0.04] * pi/180; % Current Values from Previous Research Paper
-P.sigma_SNHT = [5; 5; 5] * pi/180;
+P.sigma_pitch = 3 * pi/180; % Expected Rocking in the Qbot 2
+P.sigma_yaw = 3 * pi/180;
+P.sigma_SNHT = [0.05; 1; 1.5] * pi/180;

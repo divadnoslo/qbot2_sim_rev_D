@@ -11,14 +11,14 @@ P = format_P(out.P_posteriori);
 if (r_KF_flag == true)
     
     % Calculate Truth minus Error
-    r_error = (out.Delta_r_t__t_b - out.delta_r_t__t_b_est)';
+    r_error = (out.P_truth - out.r_t__t_b_est)';
     
     figure
     subplot(3,1,1)
     hold on
     plot(t, r_error(1,:), 'r')
     plot(t, P(7,:), 'k', t, -P(7,:), 'k')
-    title('KF Tuning Check:  \Deltar^t_t_b_,_x - \deltar^t_t_b_,_x')
+    title('KF Tuning Check:  True r^t_t_b_,_x - Estimated r^t_t_b_,_x')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('m')
@@ -29,7 +29,7 @@ if (r_KF_flag == true)
     hold on
     plot(t, r_error(2,:), 'g')
     plot(t, P(8,:), 'k', t, -P(8,:), 'k')
-    title('KF Tuning Check:  \Deltar^t_t_b_,_y - \deltar^t_t_b_,_y')
+    title('KF Tuning Check:  True r^t_t_b_,_y - Estimated r^t_t_b_,_y')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('m')
@@ -40,7 +40,7 @@ if (r_KF_flag == true)
     hold on
     plot(t, r_error(3,:), 'b')
     plot(t, P(9,:), 'k', t, -P(9,:), 'k')
-    title('KF Tuning Check:  \Deltar^t_t_b_,_z - \deltar^t_t_b_,_z')
+    title('KF Tuning Check:  True r^t_t_b_,_z - Estimated r^t_t_b_,_z')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('m')
@@ -53,14 +53,14 @@ end
 if (v_KF_flag == true)
     
     % Calculate Truth minus Error
-    v_error = (out.Delta_v_t__t_b - out.delta_v_t__t_b_est)';
+    v_error = (out.V_truth - out.v_t__t_b_est)';
     
     figure
     subplot(3,1,1)
     hold on
     plot(t, v_error(1,:), 'r')
     plot(t, P(4,:), 'k', t, -P(4,:), 'k')
-    title('KF Tuning Check:  \Deltav^t_t_b_,_x - \deltav^t_t_b_,_x')
+    title('KF Tuning Check:  True v^t_t_b_,_x - Estimated v^t_t_b_,_x')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('m/s')
@@ -71,7 +71,7 @@ if (v_KF_flag == true)
     hold on
     plot(t, v_error(2,:), 'g')
     plot(t, P(5,:), 'k', t, -P(5,:), 'k')
-    title('KF Tuning Check:  \Deltav^t_t_b_,_y - \deltav^t_t_b_,_y')
+    title('KF Tuning Check:  True v^t_t_b_,_y - Estimated v^t_t_b_,_y')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('m/s')
@@ -82,7 +82,7 @@ if (v_KF_flag == true)
     hold on
     plot(t, v_error(3,:), 'b')
     plot(t, P(6,:), 'k', t, -P(6,:), 'k')
-    title('KF Tuning Check:  \Deltav^t_t_b_,_z - \deltav^t_t_b_,_z')
+    title('KF Tuning Check:  True v^t_t_b_,_z - Estimated v^t_t_b_,_z')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('m/s')
@@ -95,13 +95,13 @@ end
 if (psi_KF_flag == true)
     
     % Convert delta_C_t__b into YPR
-    delta_ypr = zeros(3, length(t));
+    ypr = zeros(3, length(t));
     for k = 1 : length(t)
-        [delta_ypr(3,k), delta_ypr(2,k), delta_ypr(1,k)] = dcm2ypr(out.delta_C_t__b_est(:,:,k));
+        [ypr(3,k), ypr(2,k), ypr(1,k)] = dcm2ypr(out.C_t__b_est(:,:,k));
     end
     
     % Calculate Truth Minus Error
-    psi_error = (out.Delta_euler_t__t_b - delta_ypr')';
+    psi_error = (out.A_truth - ypr')';
     
     % Begin Plots
     figure
@@ -109,7 +109,7 @@ if (psi_KF_flag == true)
     hold on
     plot(t, psi_error(1,:) * 180/pi, 'r')
     plot(t, P(1,:) * 180/pi, 'k', t, -P(1,:) * 180/pi, 'k')
-    title('KF Tuning Check:  \Delta\phi^t_t_b - \delta\phi^t_t_b')
+    title('KF Tuning Check:  True \phi^t_t_b -  Estimated \phi^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('\circ')
@@ -120,7 +120,7 @@ if (psi_KF_flag == true)
     hold on
     plot(t, psi_error(2,:) * 180/pi, 'g')
     plot(t, P(2,:) * 180/pi, 'k', t, -P(2,:) * 180/pi, 'k')
-    title('KF Tuning Check:  \Delta\theta^t_t_b - \delta\theta^t_t_b')
+    title('KF Tuning Check:  True \theta^t_t_b - Estimated \theta^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('\circ')
@@ -131,7 +131,7 @@ if (psi_KF_flag == true)
     hold on
     plot(t, psi_error(3,:) * 180/pi, 'b')
     plot(t, P(3,:) * 180/pi, 'k', t, -P(3,:) * 180/pi, 'k')
-    title('KF Tuning Check:  \Delta\psi^t_t_b - \delta\psi^t_t_b')
+    title('KF Tuning Check:  True \psi^t_t_b - Estimated \psi^t_t_b')
     xlabel('Time (s)')
     xlim([0 t(end)])
     ylabel('\circ')

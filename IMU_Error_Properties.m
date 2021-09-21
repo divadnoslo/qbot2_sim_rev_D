@@ -38,7 +38,7 @@ load("IMU_Cal_Data/BS_Cal_Results.mat")
 % Set Accel Constant Errors
 if (P.accel.b_a_FB_flag == true)
     P.accel.b_a_FB = b_a_FB;
-    P.accel.b_a_BS = (2*rand - 1) .* accel_BS;
+    P.accel.b_a_BS = randn .* accel_BS;
 else
     P.accel.b_a_FB = zeros(3,1);
     P.accel.b_a_BS = zeros(3,1); 
@@ -69,7 +69,7 @@ end
 % Set Gyro Constant Errors
 if (P.gyro.b_g_FB_flag == true)
     P.gyro.b_g_FB = b_g_FB;
-    P.gyro.b_g_BS = (2*rand - 1) .* gyro_BS; 
+    P.gyro.b_g_BS = randn .* gyro_BS; 
 else
     P.gyro.b_g_FB = zeros(3,1);
     P.gyro.b_g_BS = zeros(3,1); 
